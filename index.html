@@ -16,6 +16,8 @@
             --border-color: #2c2c30;
             --danger-color: #ff453a;
             --success-color: #30d158;
+            --shark-fin: #ff9f0a;
+            --shark-dark: #0a0a0c;
         }
 
         * {
@@ -32,30 +34,90 @@
             padding-bottom: 90px;
         }
 
-        /* HEADER & LOGO */
+        /* ===== ШАПКА С ЛОГОТИПОМ-АКУЛОЙ ===== */
         header {
             background: linear-gradient(180deg, #1c1c1e 0%, var(--bg-color) 100%);
-            padding: 20px 16px 10px;
+            padding: 16px 16px 10px;
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* ЛОГОТИП В ФОРМЕ РЫБЫ / АКУЛЫ КАК НА ФОТО */
-        .fish-logo-wrapper {
+        /* Логотип-акула */
+        .shark-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 2px;
+            position: relative;
+            line-height: 1;
+        }
+
+        .shark-fin-icon {
+            width: 42px;
+            height: 42px;
+            margin-right: -6px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 6px rgba(255, 159, 10, 0.5));
+            animation: finPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes finPulse {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 159, 10, 0.5)); }
+            50% { filter: drop-shadow(0 0 14px rgba(255, 159, 10, 0.9)); }
+        }
+
+        .logo-title {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            font-family: 'Arial Black', 'Impact', sans-serif;
+            text-shadow: 
+                0 0 20px rgba(255, 159, 10, 0.25),
+                0 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-title .fishka-text {
+            background: linear-gradient(180deg, #ffffff 0%, #e0e0e5 40%, #a1a1a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Зубы акулы — декоративная полоска под лого */
+        .shark-teeth {
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin-bottom: 6px;
+            gap: 2px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            opacity: 0.7;
         }
 
-        .fish-logo-svg {
-            width: 190px;
-            height: auto;
-            max-width: 80vw;
-            filter: drop-shadow(0px 2px 8px rgba(0,0,0,0.5));
+        .shark-teeth span {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 6px solid var(--accent-color);
+            filter: drop-shadow(0 0 2px rgba(255,159,10,0.6));
+        }
+
+        .shark-teeth span:nth-child(even) {
+            border-top-color: #ffb84d;
+            transform: scaleY(1.2);
         }
 
         .table-badge {
@@ -64,12 +126,14 @@
             color: #000;
             font-weight: 700;
             font-size: 13px;
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
-            margin-top: 4px;
+            margin-top: 6px;
+            box-shadow: 0 2px 12px rgba(255, 159, 10, 0.3);
+            letter-spacing: 0.5px;
         }
 
-        /* CATEGORIES NAV */
+        /* ===== КАТЕГОРИИ ===== */
         .categories-scroll {
             display: flex;
             gap: 8px;
@@ -97,9 +161,10 @@
             background-color: var(--accent-color);
             color: #000;
             border-color: var(--accent-color);
+            box-shadow: 0 2px 10px rgba(255, 159, 10, 0.25);
         }
 
-        /* MENU LIST & CARDS */
+        /* ===== МЕНЮ ===== */
         .menu-container {
             padding: 16px;
             max-width: 600px;
@@ -122,6 +187,11 @@
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            transition: border-color 0.2s;
+        }
+
+        .food-card:hover {
+            border-color: rgba(255, 159, 10, 0.3);
         }
 
         .food-img {
@@ -164,7 +234,7 @@
             color: var(--accent-color);
         }
 
-        /* COUNTER CONTROLS */
+        /* ===== СЧЁТЧИК ===== */
         .counter-controls {
             display: flex;
             align-items: center;
@@ -198,9 +268,14 @@
             border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
+            transition: transform 0.15s;
         }
 
-        /* CART FLOATING BAR */
+        .btn-add:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== КОРЗИНА ===== */
         .cart-bar {
             position: fixed;
             bottom: 16px;
@@ -221,7 +296,7 @@
             font-weight: 800;
         }
 
-        /* ADMIN & MODAL STYLES */
+        /* ===== АДМИНКА ===== */
         .admin-trigger {
             position: fixed;
             top: 12px;
@@ -300,26 +375,38 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <div class="fish-logo-wrapper">
-            <!-- Векторный логотип "FiSHKA" в форме акулы/рыбы по образцу фото -->
-            <svg class="fish-logo-svg" viewBox="0 0 450 160" xmlns="http://www.w3.org/2000/svg">
-                <g fill="#ffffff">
-                    <!-- Буква F (Голова и рот акулы) -->
-                    <path d="M 15 80 Q 25 35 65 25 C 75 25 80 32 75 48 C 65 48 50 55 50 70 L 80 65 C 85 75 75 85 52 85 L 50 100 Q 52 112 68 110 C 75 125 60 135 45 130 Q 20 120 15 80 Z"/>
-                    <!-- Буква i с точкой над головой -->
-                    <path d="M 92 50 L 108 50 L 102 122 L 86 122 Z"/>
-                    <circle cx="100" cy="30" r="10"/>
-                    <!-- Буква S (Центральная дуга тела) -->
-                    <path d="M 160 30 C 120 20 115 65 145 75 C 175 85 160 130 120 120 C 115 105 130 100 138 100 C 150 120 180 95 150 60 C 130 40 160 30 160 30 Z"/>
-                    <!-- Буква h -->
-                    <path d="M 180 20 L 198 20 L 198 62 C 208 48 230 48 232 70 L 232 125 L 214 125 L 214 76 C 212 62 198 65 198 78 L 198 125 L 180 125 Z"/>
-                    <!-- Буква K -->
-                    <path d="M 248 22 L 266 22 L 266 65 L 295 25 L 320 25 L 285 70 L 325 128 L 300 128 L 266 78 L 266 128 L 248 128 Z"/>
-                    <!-- Буква A (Хвост акулы) -->
-                    <path d="M 370 20 C 390 10 420 5 440 20 C 420 50 395 70 380 78 C 400 95 425 115 440 140 C 410 150 380 140 365 110 L 362 138 L 345 138 L 368 20 Z M 378 50 L 370 85 C 382 78 392 65 398 50 Z"/>
-                </g>
+        <!-- ЛОГОТИП-АКУЛА -->
+        <div class="shark-logo">
+            <!-- SVG-плавник акулы -->
+            <svg class="shark-fin-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Плавник -->
+                <path d="M28 4 C28 4, 46 18, 50 38 C52 48, 46 52, 38 50 C30 48, 22 42, 18 34 C14 26, 16 14, 28 4 Z" 
+                      fill="url(#finGrad)" stroke="#ffb84d" stroke-width="0.8"/>
+                <!-- Верхний кончик -->
+                <path d="M28 4 C28 4, 32 12, 30 20 C28 12, 26 8, 28 4 Z" fill="#ffcc66" opacity="0.6"/>
+                <!-- Блики -->
+                <path d="M30 10 C34 16, 40 26, 44 38" stroke="#ffdd99" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+                <path d="M24 14 C28 20, 32 28, 34 36" stroke="#ffdd99" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/>
+                <!-- Хвост-капля -->
+                <path d="M46 40 C50 44, 52 50, 48 54 C46 50, 42 46, 46 40 Z" fill="#ff9f0a" opacity="0.5"/>
+                <!-- Градиент -->
+                <defs>
+                    <linearGradient id="finGrad" x1="18" y1="4" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#ffcc66"/>
+                        <stop offset="45%" stop-color="#ff9f0a"/>
+                        <stop offset="100%" stop-color="#cc7a00"/>
+                    </linearGradient>
+                </defs>
             </svg>
+            <span class="logo-title"><span class="fishka-text">FiSHKA</span></span>
         </div>
+
+        <!-- Зубы акулы (декор) -->
+        <div class="shark-teeth">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
         <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
