@@ -6,10 +6,6 @@
     <title>FiSHKA — Меню и Заказ</title>
     <!-- Подключение QR-библиотеки для генерирования кодов высокого качества -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Подключение дерзкого акцентного шрифта Shojumaru для стилизации логотипа-акулы -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #121214;
@@ -47,31 +43,18 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* Стиль логотипа в форме акулы (резкие агрессивные плавники и зубцы) */
         .logo-title {
-            font-size: 38px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent-color);
-            margin-bottom: 4px;
-            font-family: 'Shojumaru', 'Arial Black', display, sans-serif;
-            display: inline-flex;
-            align-items: center;
+            display: flex;
             justify-content: center;
-            gap: 6px;
-            text-shadow: 2px 2px 0px #000, -1px -1px 0px #000, 0px 4px 12px rgba(255, 159, 10, 0.4);
-            position: relative;
+            align-items: center;
+            margin-bottom: 4px;
         }
 
-        /* Элемент акульего плавника над буквой */
-        .logo-title::after {
-            content: "🦈";
-            font-size: 28px;
-            margin-left: 4px;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.8));
-            transform: scaleX(-1) rotate(-10deg);
-            display: inline-block;
+        .logo-title svg {
+            width: 180px;
+            height: auto;
+            max-height: 60px;
+            fill: #ffffff;
         }
 
         .table-badge {
@@ -316,7 +299,12 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <div class="logo-title">FiSHKA</div>
+        <div class="logo-title">
+            <!-- Точный логотип FiSHKA в форме акулы/рыбы с фото -->
+            <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 197 122 C 163 173 118 214 62 251 C 117 287 163 328 197 380 C 198 335 186 289 162 251 C 186 213 198 167 197 122 Z M 216 261 C 205 324 233 381 292 388 C 363 397 435 342 431 270 C 428 206 363 183 298 186 C 243 189 217 222 216 261 Z M 230 148 C 223 148 217 138 221 129 C 227 116 242 116 248 129 C 251 138 244 148 230 148 Z M 264 263 C 265 233 286 216 319 216 C 361 216 386 242 383 282 C 380 327 337 356 295 349 C 266 344 263 303 264 263 Z M 448 266 C 445 321 471 386 525 388 C 555 389 572 361 573 331 C 574 274 547 218 493 216 C 463 215 449 236 448 266 Z M 491 262 C 491 242 499 232 513 232 C 527 232 531 248 531 278 C 531 315 524 362 506 362 C 492 362 491 302 491 262 Z M 575 259 C 576 295 593 385 640 385 C 655 385 668 358 668 336 C 668 316 653 304 633 293 C 613 282 598 274 598 259 C 598 244 613 236 628 236 C 648 236 663 253 663 273 C 683 273 700 258 700 238 C 700 203 663 185 628 185 C 588 185 574 219 575 259 Z M 658 336 C 658 356 648 368 633 368 C 618 368 613 351 613 331 C 613 301 628 296 648 306 C 658 311 658 323 658 336 Z M 715 220 L 715 380 L 755 380 L 755 320 L 795 320 L 795 380 L 835 380 L 835 220 L 795 220 L 795 280 L 755 280 L 755 220 Z M 850 380 L 890 220 L 930 220 L 970 380 L 930 380 L 920 340 L 900 340 L 890 380 Z M 910 260 L 905 310 L 915 310 Z" />
+            </svg>
+        </div>
         <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
