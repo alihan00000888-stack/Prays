@@ -1,293 +1,283 @@
-            padding: 15px 20px;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiSHKA — Меню и Заказ</title>
+    <!-- Подключение QR-библиотеки для генерирования кодов высокого качества -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1e1e24;
+            --accent-color: #ff9f0a;
+            --text-main: #f2f2f7;
+            --text-sub: #a1a1a6;
+            --border-color: #2c2c30;
+            --danger-color: #ff453a;
+            --success-color: #30d158;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 90px;
+        }
+
+        /* HEADER & LOGO */
+        header {
+            background: linear-gradient(180deg, #1c1c1e 0%, var(--bg-color) 100%);
+            padding: 20px 16px 10px;
+            text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-text {
-            font-size: 26px;
+        .logo-title {
+            font-size: 32px;
             font-weight: 900;
             letter-spacing: 2px;
-            color: var(--accent-color);
             text-transform: uppercase;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            font-family: 'Arial Black', sans-serif;
         }
 
         .table-badge {
-            background-color: var(--border-color);
-            padding: 6px 12px;
-            border-radius: 20px;
+            display: inline-block;
+            background: var(--accent-color);
+            color: #000;
+            font-weight: 700;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 4px;
         }
 
-        /* Категории */
-        .categories-nav {
+        /* CATEGORIES NAV */
+        .categories-scroll {
             display: flex;
+            gap: 8px;
             overflow-x: auto;
-            padding: 12px 15px;
-            gap: 10px;
-            background: #18181c;
-            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+            background-color: var(--bg-color);
             scrollbar-width: none;
         }
-        .categories-nav::-webkit-scrollbar { display: none; }
+        .categories-scroll::-webkit-scrollbar { display: none; }
 
         .cat-btn {
-            background: var(--card-bg);
-            color: var(--text-muted);
+            background-color: var(--card-bg);
+            color: var(--text-sub);
             border: 1px solid var(--border-color);
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 12px;
             white-space: nowrap;
             font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .cat-btn.active {
-            background: var(--accent-color);
+            background-color: var(--accent-color);
             color: #000;
-            font-weight: bold;
             border-color: var(--accent-color);
         }
 
-        /* Каталог блюд */
-        .container {
+        /* MENU LIST & CARDS */
+        .menu-container {
+            padding: 16px;
             max-width: 600px;
             margin: 0 auto;
-            padding: 15px;
         }
 
         .section-title {
             font-size: 20px;
-            margin: 20px 0 12px 0;
-            color: var(--accent-color);
+            margin: 16px 0 12px;
+            color: var(--text-main);
             border-left: 4px solid var(--accent-color);
-            padding-left: 10px;
-        }
-
-        .food-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            padding-left: 8px;
         }
 
         .food-card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .food-img {
-            width: 85px;
-            height: 85px;
-            border-radius: 10px;
-            object-fit: cover;
-            background: #2a2a30;
-            flex-shrink: 0;
-        }
-
-        .food-info {
-            flex-grow: 1;
-        }
-
-        .food-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .food-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .food-price {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--accent-color);
-        }
-
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-color);
-            padding: 4px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-qty {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            border: none;
-            background: var(--accent-color);
-            color: #000;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .qty-val {
-            font-weight: bold;
-            min-width: 18px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        /* Корзина снизу */
-        .cart-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #18181c;
-            border-top: 1px solid var(--border-color);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-            z-index: 99;
-        }
-
-        .cart-total {
             display: flex;
             flex-direction: column;
         }
 
-        .cart-total-price {
-            font-size: 20px;
-            font-weight: bold;
+        .food-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #2c2c2e;
+        }
+
+        .food-info {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .food-name {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .food-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .food-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .food-price {
+            font-size: 18px;
+            font-weight: 800;
             color: var(--accent-color);
         }
 
-        .cart-total-time {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .btn-send {
-            background: #25D366;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
+        /* COUNTER CONTROLS */
+        .counter-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: 0.2s;
+            background: #2c2c2e;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        .btn-send:disabled {
-            background: var(--border-color);
-            color: var(--text-muted);
-            cursor: not-allowed;
-        }
-
-        /* Кнопка Админки */
-        .admin-trigger {
+        .btn-qty {
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
             font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
         }
 
-        /* Модальные окна */
+        .qty-val {
+            padding: 0 8px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .btn-add {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* CART FLOATING BAR */
+        .cart-bar {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            max-width: 568px;
+            margin: 0 auto;
+            background-color: var(--accent-color);
+            color: #000;
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(255, 159, 10, 0.3);
+            z-index: 99;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        /* ADMIN & MODAL STYLES */
+        .admin-trigger {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            opacity: 0.2;
+            font-size: 18px;
+            color: #fff;
+            z-index: 101;
+        }
+
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            inset: 0;
             background: rgba(0,0,0,0.85);
             z-index: 200;
-            padding: 20px;
             overflow-y: auto;
+            padding: 20px 16px;
         }
 
         .modal-content {
             background: var(--card-bg);
-            border-radius: 14px;
+            border-radius: 16px;
             padding: 20px;
-            max-width: 500px;
-            margin: 30px auto;
+            max-width: 600px;
+            margin: 0 auto;
             border: 1px solid var(--border-color);
-            position: relative;
         }
 
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: none; border: none;
-            color: var(--text-muted);
-            font-size: 22px; cursor: pointer;
-        }
-
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .input-field {
+        .input-field, select {
             width: 100%;
             padding: 10px;
-            border-radius: 8px;
+            margin: 6px 0 12px;
+            background: #2c2c2e;
             border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-main);
-            font-size: 14px;
+            color: #fff;
+            border-radius: 8px;
         }
 
-        .btn-primary {
+        .btn-action {
             width: 100%;
+            padding: 12px;
             background: var(--accent-color);
             color: #000;
-            font-weight: bold;
             border: none;
-            padding: 12px;
             border-radius: 8px;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            margin-bottom: 8px;
         }
 
-        /* Сетка QR кодов */
+        .btn-danger { background: var(--danger-color); color: #fff; }
+        .btn-close { background: #3a3a3c; color: #fff; }
+
         .qr-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            gap: 16px;
+            margin-top: 16px;
         }
 
         .qr-card {
@@ -297,362 +287,356 @@
             border-radius: 8px;
             text-align: center;
         }
-
-        .qr-card div {
-            margin: 0 auto 5px auto;
-        }
-
-        .qr-card span {
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        @media print {
-            body * { visibility: hidden; }
-            #qrPrintSection, #qrPrintSection * { visibility: visible; }
-            #qrPrintSection { position: absolute; left: 0; top: 0; width: 100%; }
-            .qr-card { page-break-inside: avoid; margin-bottom: 20px; }
-        }
+        .qr-card div { margin: 0 auto; }
     </style>
 </head>
 <body>
 
-    <!-- Шапка -->
+    <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
+
     <header>
-        <div class="logo-container">
-            <div class="logo-text">FiSHKa</div>
-            <div class="table-badge" id="tableDisplay">Стол: Не выбран</div>
-        </div>
-        <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
+        <div class="logo-title">FiSHKA</div>
+        <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
-    <!-- Навигация по категориям -->
-    <div class="categories-nav" id="categoriesNav"></div>
+    <nav class="categories-scroll" id="categoriesNav">
+        <!-- Категории будут сгенерированы автоматически -->
+    </nav>
 
-    <!-- Основной контент -->
-    <div class="container" id="menuContainer"></div>
+    <main class="menu-container" id="menuContainer">
+        <!-- Меню будет сгенерировано динамически -->
+    </main>
 
-    <!-- Нижняя плашка корзины -->
-    <div class="cart-bar">
-        <div class="cart-total">
-            <div class="cart-total-price" id="totalPrice">0 ₽</div>
-            <div class="cart-total-time" id="totalTime">Время ожидания: ~0 мин</div>
+    <div class="cart-bar" id="cartBar" style="display: none;" onclick="sendOrderToWhatsApp()">
+        <div>
+            <span id="cartCount">0</span> позиций
         </div>
-        <button class="btn-send" id="sendOrderBtn" onclick="sendOrderToWhatsApp()" disabled>
-            Заказать в WhatsApp
-        </button>
+        <div>Отправить заказ в WhatsApp ➔</div>
+        <div id="cartTotal">0 ₽</div>
     </div>
 
-    <!-- Модальное окно Входа в Админку -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('loginModal')">✕</button>
-            <h3 style="margin-bottom:15px;">Вход для администратора</h3>
-            <div class="input-group">
-                <label>Введите пароль</label>
-                <input type="password" id="adminPasswordInput" class="input-field" placeholder="Пароль">
-            </div>
-            <button class="btn-primary" onclick="checkAdminPassword()">Войти</button>
-        </div>
-    </div>
-
-    <!-- Панель Администратора -->
+    <!-- МОДАЛЬНОЕ ОКНО АДМИНКИ -->
     <div class="modal" id="adminModal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('adminModal')">✕</button>
-            <h2 style="margin-bottom:15px; color: var(--accent-color);">Управление меню</h2>
-
-            <!-- Форма добавления/редактирования -->
-            <div style="border-bottom: 1px solid var(--border-color); padding-bottom:15px; margin-bottom:15px;">
-                <h4 style="margin-bottom:10px;">Добавить / Изменить блюдо</h4>
-                <input type="hidden" id="editItemId">
-                <div class="input-group">
-                    <label>Категория</label>
-                    <select id="itemCat" class="input-field">
-                        <option value="Роллы">Роллы</option>
-                        <option value="Фаст-Фуд">Фаст-Фуд</option>
-                        <option value="Восточная Кухня">Восточная Кухня</option>
-                        <option value="Салаты">Салаты</option>
-                        <option value="Пиццы">Пиццы</option>
-                        <option value="Напитки">Напитки</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Название</label>
-                    <input type="text" id="itemName" class="input-field">
-                </div>
-                <div class="input-group">
-                    <label>Цена (₽)</label>
-                    <input type="number" id="itemPrice" class="input-field">
-                </div>
-                <div class="input-group">
-                    <label>Время приготовления (мин)</label>
-                    <input type="number" id="itemPrepTime" class="input-field" value="15">
-                </div>
-                <div class="input-group">
-                    <label>Ссылка на фото (URL)</label>
-                    <input type="text" id="itemImg" class="input-field">
-                </div>
-                <button class="btn-primary" onclick="saveMenuItem()">Сохранить позицию</button>
+            <h2 style="margin-bottom: 12px;">Панель Управления</h2>
+            
+            <div id="authBlock">
+                <p>Введите пароль администратора:</p>
+                <input type="password" id="adminPassword" class="input-field" placeholder="Пароль">
+                <button class="btn-action" onclick="checkAdminPassword()">Войти</button>
+                <button class="btn-action btn-close" onclick="closeAdminModal()">Закрыть</button>
             </div>
 
-            <!-- Генерирование QR-кодов -->
-            <div>
-                <h4 style="margin-bottom:10px;">Печать QR-кодов столиков (40 столов)</h4>
-                <button class="btn-primary" style="background:#3742fa; color:#fff;" onclick="generateQRCodes()">Сгенерировать 40 QR-кодов</button>
-                <div id="qrPrintSection" class="qr-grid"></div>
+            <div id="adminPanel" style="display: none;">
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <button class="btn-action" onclick="showAdminTab('editor')">Редактор Меню</button>
+                    <button class="btn-action" onclick="showAdminTab('qr')">QR-коды (40 столов)</button>
+                </div>
+
+                <!-- Вкладка Редактора -->
+                <div id="tabEditor">
+                    <h3>Добавить / Изменить блюдо</h3>
+                    <input type="hidden" id="editIndex">
+                    <input type="text" id="editName" class="input-field" placeholder="Название блюда">
+                    <input type="number" id="editPrice" class="input-field" placeholder="Цена (руб)">
+                    <input type="text" id="editTime" class="input-field" placeholder="Время готовки (~15 мин)">
+                    <select id="editCategory" class="input-field">
+                        <!-- Динамически заполняется -->
+                    </select>
+                    <p style="font-size: 12px; color: var(--text-sub);">Загрузить фото из памяти устройства:</p>
+                    <input type="file" id="editImageFile" accept="image/*" class="input-field">
+                    
+                    <button class="btn-action" onclick="saveFoodItem()">Сохранить позицию</button>
+                    <button class="btn-action btn-close" onclick="resetEditForm()">Очистить форму</button>
+                    <hr style="border-color: var(--border-color); margin: 16px 0;">
+                    
+                    <h3>Текущее меню</h3>
+                    <div id="adminFoodList" style="margin-top: 10px;"></div>
+                </div>
+
+                <!-- Вкладка QR-кодов -->
+                <div id="tabQR" style="display: none;">
+                    <h3>QR-коды для 40 столиков</h3>
+                    <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 10px;">Распечатайте и наклейте на соответствующие столики:</p>
+                    <div class="qr-grid" id="qrGrid"></div>
+                </div>
+
+                <br>
+                <button class="btn-action btn-close" onclick="closeAdminModal()">Выйти из админки</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Инициализация базы данных блюд
+        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
+        const PHONE_NUMBER = "79681755402";
+        
         const initialMenu = [
-            // Роллы
-            { id: 1, name: "Горячий шик", price: 300, prepTime: 20, cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300" },
-            { id: 2, name: "Бешеный лосось", price: 300, prepTime: 20, cat: "Роллы", img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=300" },
-            { id: 3, name: "Калифорния краб", price: 250, prepTime: 15, cat: "Роллы", img: "https://images.unsplash.com/photo-1553621042-f6e147245754?w=300" },
-            { id: 4, name: "Филадельфия", price: 300, prepTime: 15, cat: "Роллы", img: "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=300" },
-            { id: 5, name: "Американо", price: 300, prepTime: 15, cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300" },
-
-            // Фаст-фуд
-            { id: 6, name: "Гамбургер куриный", price: 130, prepTime: 10, cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300" },
-            { id: 7, name: "Чизбургер говяжий", price: 150, prepTime: 12, cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=300" },
-            { id: 8, name: "Бургер Fishka", price: 200, prepTime: 15, cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=300" },
-            { id: 9, name: "Хот-дог", price: 120, prepTime: 8, cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=300" },
-            { id: 10, name: "Картошка фри", price: 130, prepTime: 8, cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300" },
-
-            // Восточная кухня
-            { id: 11, name: "Шаурма", price: 200, prepTime: 10, cat: "Восточная Кухня", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=300" },
-            { id: 12, name: "Шашлык", price: 430, prepTime: 25, cat: "Восточная Кухня", img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300" },
-            { id: 13, name: "Люля кебаб", price: 380, prepTime: 20, cat: "Восточная Кухня", img: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=300" },
-
-            // Салаты
-            { id: 14, name: "Цезарь с курицей", price: 300, prepTime: 12, cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300" },
-            { id: 15, name: "Греческий", price: 300, prepTime: 10, cat: "Салаты", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300" },
-
-            // Пиццы
-            { id: 16, name: "Пицца Грибная", price: 350, prepTime: 20, cat: "Пиццы", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300" },
-            { id: 17, name: "Хачапури с сыром", price: 300, prepTime: 18, cat: "Пиццы", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=300" },
-
-            // Напитки
-            { id: 18, name: "Капучино", price: 200, prepTime: 5, cat: "Напитки", img: "https://images.unsplash.com/photo-1534778101976-62847782c213?w=300" },
-            { id: 19, name: "Лимонад Клубничный", price: 180, prepTime: 5, cat: "Напитки", img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300" }
+            { name: "Горячий шик", price: 300, time: "~15-20 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500" },
+            { name: "Филадельфия", price: 300, time: "~15 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500" },
+            { name: "Гамбургер куриный", price: 130, time: "~10 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" },
+            { name: "Хот-дог", price: 120, time: "~7 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500" },
+            { name: "Шаурма", price: 200, time: "~10 мин", cat: "Восточная кухня", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=500" },
+            { name: "Цезарь с курицей", price: 300, time: "~12 мин", cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" },
+            { name: "Американо", price: 150, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
         ];
 
-        // Загрузка меню из LocalStorage
         let menuData = JSON.parse(localStorage.getItem('fishka_menu')) || initialMenu;
         let cart = {};
-        let currentTable = "1";
-        let targetPhoneNumber = "79681755402";
+        let activeCategory = "Все";
+        let currentTable = 1;
 
-        // Определяем столик из URL
+        // ПОЛУЧЕНИЕ НОМЕРА СТОЛА ИЗ URL (?table=N)
         function initTableNumber() {
             const urlParams = new URLSearchParams(window.location.search);
             const tableParam = urlParams.get('table');
             if (tableParam) {
                 currentTable = tableParam;
             }
-            document.getElementById('tableDisplay').innerText = `Стол: №${currentTable}`;
+            document.getElementById('tableBadge').innerText = `Столик №${currentTable}`;
         }
 
-        // Отрисовка навигации по категориям
+        // РЕНДЕР КАТЕГОРИЙ И МЕНЮ
         function renderCategories() {
-            const categories = [...new Set(menuData.map(item => item.cat))];
-            const container = document.getElementById('categoriesNav');
-            container.innerHTML = categories.map((cat, idx) => `
-                <button class="cat-btn ${idx === 0 ? 'active' : ''}" onclick="filterCategory('${cat}', this)">${cat}</button>
+            const categories = ["Все", ...new Set(menuData.map(item => item.cat))];
+            const nav = document.getElementById('categoriesNav');
+            nav.innerHTML = categories.map(cat => `
+                <button class="cat-btn ${cat === activeCategory ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>
             `).join('');
-            renderMenu(categories[0]);
+
+            // Заполнение категорий в админке
+            const editCatSelect = document.getElementById('editCategory');
+            editCatSelect.innerHTML = categories.filter(c => c !== "Все").map(c => `<option value="${c}">${c}</option>`).join('');
+            editCatSelect.innerHTML += `<option value="Новая">+ Добавить новую категорию</option>`;
         }
 
-        // Отрисовка блюд выбранной категории
-        function filterCategory(cat, btn) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            renderMenu(cat);
+        function setCategory(cat) {
+            activeCategory = cat;
+            renderCategories();
+            renderMenu();
         }
 
-        function renderMenu(category) {
+        function renderMenu() {
             const container = document.getElementById('menuContainer');
-            const items = menuData.filter(i => i.cat === category);
+            const filtered = activeCategory === "Все" ? menuData : menuData.filter(i => i.cat === activeCategory);
 
-            container.innerHTML = `
-                <div class="section-title">${category}</div>
-                <div class="food-grid">
-                    ${items.map(item => `
-                        <div class="food-card">
-                            <img src="${item.img}" class="food-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100?text=FiSHKa'">
-                            <div class="food-info">
-                                <div class="food-title">${item.name}</div>
-                                <div class="food-meta">⌛ ~${item.prepTime} мин</div>
-                                <div class="food-price">${item.price} ₽</div>
-                            </div>
-                            <div class="controls">
-                                <button class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
-                                <span class="qty-val" id="qty-${item.id}">${cart[item.id] || 0}</span>
-                                <button class="btn-qty" onclick="updateQty(${item.id}, 1)">+</button>
-                            </div>
+            container.innerHTML = filtered.map((item, idx) => {
+                const globalIndex = menuData.indexOf(item);
+                const qty = cart[globalIndex] || 0;
+
+                return `
+                <div class="food-card">
+                    <img src="${item.img}" class="food-img" alt="${item.name}">
+                    <div class="food-info">
+                        <div class="food-name">${item.name}</div>
+                        <div class="food-meta">
+                            <span>⏱ ${item.time || '~15 мин'}</span>
+                            <span>Категория: ${item.cat}</span>
                         </div>
-                    `).join('')}
+                        <div class="food-bottom">
+                            <div class="food-price">${item.price} ₽</div>
+                            ${qty > 0 ? `
+                                <div class="counter-controls">
+                                    <button class="btn-qty" onclick="updateQty(${globalIndex}, -1)">-</button>
+                                    <span class="qty-val">${qty}</span>
+                                    <button class="btn-qty" onclick="updateQty(${globalIndex}, 1)">+</button>
+                                </div>
+                            ` : `
+                                <button class="btn-add" onclick="updateQty(${globalIndex}, 1)">Добавить</button>
+                            `}
+                        </div>
+                    </div>
                 </div>
-            `;
+                `;
+            }).join('');
         }
 
-        // Обновление количества порций
-        function updateQty(itemId, change) {
-            const current = cart[itemId] || 0;
-            const updated = Math.max(0, current + change);
-
-            if (updated === 0) {
-                delete cart[itemId];
-            } else {
-                cart[itemId] = updated;
-            }
-
-            const qtyEl = document.getElementById(`qty-${itemId}`);
-            if (qtyEl) qtyEl.innerText = updated;
-
-            updateCartSummary();
+        // КОРЗИНА И ОБНОВЛЕНИЕ ПОРЦИЙ
+        function updateQty(index, delta) {
+            cart[index] = (cart[index] || 0) + delta;
+            if (cart[index] <= 0) delete cart[index];
+            renderMenu();
+            updateCartBar();
         }
 
-        // Подсчет сводки корзины
-        function updateCartSummary() {
-            let total = 0;
-            let maxTime = 0;
+        function updateCartBar() {
+            const cartBar = document.getElementById('cartBar');
             let totalCount = 0;
+            let totalPrice = 0;
 
-            for (let id in cart) {
-                const item = menuData.find(i => i.id == id);
-                if (item) {
-                    total += item.price * cart[id];
-                    totalCount += cart[id];
-                    if (item.prepTime > maxTime) maxTime = item.prepTime;
-                }
+            for (let idx in cart) {
+                totalCount += cart[idx];
+                totalPrice += cart[idx] * menuData[idx].price;
             }
 
-            document.getElementById('totalPrice').innerText = `${total} ₽`;
-            document.getElementById('totalTime').innerText = totalCount > 0 
-                ? `Время ожидания: ~${maxTime} мин` 
-                : `Время ожидания: ~0 мин`;
-
-            document.getElementById('sendOrderBtn').disabled = totalCount === 0;
+            if (totalCount > 0) {
+                cartBar.style.display = 'flex';
+                document.getElementById('cartCount').innerText = totalCount;
+                document.getElementById('cartTotal').innerText = `${totalPrice} ₽`;
+            } else {
+                cartBar.style.display = 'none';
+            }
         }
 
-        // Формирование и отправка заказа в WhatsApp
+        // ОТПРАВКА В WHATSAPP
         function sendOrderToWhatsApp() {
-            let message = `🔴 *НОВЫЙ ЗАКАЗ — СТОЛ №${currentTable}*\n`;
-            message += `------------------------------\n`;
+            let orderText = `📍 *ЗАКАЗ — СТОЛИК №${currentTable}*\n\n`;
+            let totalPrice = 0;
 
-            let total = 0;
-            let maxTime = 0;
-
-            for (let id in cart) {
-                const item = menuData.find(i => i.id == id);
-                if (item) {
-                    const sum = item.price * cart[id];
-                    total += sum;
-                    if (item.prepTime > maxTime) maxTime = item.prepTime;
-                    message += `• *${item.name}* x${cart[id]} = ${sum} ₽\n`;
-                }
+            for (let idx in cart) {
+                const item = menuData[idx];
+                const itemTotal = item.price * cart[idx];
+                totalPrice += itemTotal;
+                orderText += `• ${item.name} x${cart[idx]} = ${itemTotal} ₽\n`;
             }
 
-            message += `------------------------------\n`;
-            message += `💰 *Итого к оплате:* ${total} ₽\n`;
-            message += `⌛ *Примерное время:* ~${maxTime} мин`;
+            orderText += `\n💰 *Итого к оплате:* ${totalPrice} ₽`;
 
-            const encodedMessage = encodeURIComponent(message);
-            const waUrl = `https://wa.me/${targetPhoneNumber}?text=${encodedMessage}`;
-            window.open(waUrl, '_blank');
+            const encodedText = encodeURIComponent(orderText);
+            window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
         }
 
-        // Логика Админ-панели
+        // АДМИНКА И ПАРОЛЬ
         function openAdminModal() {
-            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('adminModal').style.display = 'block';
         }
 
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
         }
 
         function checkAdminPassword() {
-            const pass = document.getElementById('adminPasswordInput').value;
-            if (pass === '54321') {
-                closeModal('loginModal');
-                document.getElementById('adminModal').style.display = 'block';
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === "54321") {
+                document.getElementById('authBlock').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                renderAdminFoodList();
+                generateQRCodes();
             } else {
-                alert('Неверный пароль!');
+                alert("Неверный пароль!");
             }
         }
 
-        function saveMenuItem() {
-            const name = document.getElementById('itemName').value;
-            const price = parseFloat(document.getElementById('itemPrice').value);
-            const prepTime = parseInt(document.getElementById('itemPrepTime').value);
-            const cat = document.getElementById('itemCat').value;
-            const img = document.getElementById('itemImg').value || "https://via.placeholder.com/100?text=FiSHKa";
+        function showAdminTab(tab) {
+            document.getElementById('tabEditor').style.display = tab === 'editor' ? 'block' : 'none';
+            document.getElementById('tabQR').style.display = tab === 'qr' ? 'block' : 'none';
+        }
 
-            if (!name || isNaN(price)) {
-                alert('Заполните название и цену!');
+        // РЕДАКТИРОВАНИЕ И СОХРАНЕНИЕ
+        function saveFoodItem() {
+            const name = document.getElementById('editName').value;
+            const price = parseFloat(document.getElementById('editPrice').value);
+            const time = document.getElementById('editTime').value;
+            let cat = document.getElementById('editCategory').value;
+            const fileInput = document.getElementById('editImageFile');
+            const editIndex = document.getElementById('editIndex').value;
+
+            if (cat === "Новая") {
+                cat = prompt("Введите название новой категории:");
+                if (!cat) return;
+            }
+
+            if (!name || !price) {
+                alert("Заполните имя и цену!");
                 return;
             }
 
-            const newItem = {
-                id: Date.now(),
-                name,
-                price,
-                prepTime: prepTime || 15,
-                cat,
-                img
+            const processSave = (imgUrl) => {
+                const itemObj = {
+                    name, price, time: time || "~15 мин", cat,
+                    img: imgUrl || (editIndex !== "" ? menuData[editIndex].img : "https://via.placeholder.com/300")
+                };
+
+                if (editIndex !== "") {
+                    menuData[editIndex] = itemObj;
+                } else {
+                    menuData.push(itemObj);
+                }
+
+                localStorage.setItem('fishka_menu', JSON.stringify(menuData));
+                resetEditForm();
+                renderCategories();
+                renderMenu();
+                renderAdminFoodList();
+                alert("Сохранено!");
             };
 
-            menuData.push(newItem);
-            localStorage.setItem('fishka_menu', JSON.stringify(menuData));
-            alert('Блюдо успешно добавлено!');
-            
-            // Очистка полей
-            document.getElementById('itemName').value = '';
-            document.getElementById('itemPrice').value = '';
-            
-            renderCategories();
-        }
-
-        // Генерация 40 QR-кодов для печати
-        function generateQRCodes() {
-            const container = document.getElementById('qrPrintSection');
-            container.innerHTML = '';
-            
-            // Получаем базовый URL (без параметров)
-            const baseUrl = window.location.href.split('?')[0];
-
-            for (let i = 1; i <= 40; i++) {
-                const qrCard = document.createElement('div');
-                qrCard.className = 'qr-card';
-                
-                const qrDiv = document.createElement('div');
-                const tableUrl = `${baseUrl}?table=${i}`;
-
-                new QRCode(qrDiv, {
-                    text: tableUrl,
-                    width: 100,
-                    height: 100
-                });
-
-                qrCard.appendChild(qrDiv);
-                
-                const label = document.createElement('span');
-                label.innerText = `СТОЛ №${i}`;
-                qrCard.appendChild(label);
-
-                container.appendChild(qrCard);
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processSave(e.target.result); // Конвертация файла в DataURL
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                processSave(null);
             }
         }
 
-        // Стартовая инициализация
-        window.onload = () => {
-            initTableNumber();
-            renderCategories();
-        };
+        function renderAdminFoodList() {
+            const container = document.getElementById('adminFoodList');
+            container.innerHTML = menuData.map((item, idx) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#2c2c2e; padding:8px; margin-bottom:6px; border-radius:8px;">
+                    <div><strong>${item.name}</strong> (${item.price} ₽)</div>
+                    <div>
+                        <button style="padding:4px 8px;" onclick="editFoodItem(${idx})">✏️</button>
+                        <button style="padding:4px 8px; background:var(--danger-color); color:#fff; border:none; border-radius:4px;" onclick="deleteFoodItem(${idx})">🗑</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editFoodItem(idx) {
+            const item = menuData[idx];
+            document.getElementById('editIndex').value = idx;
+            document.getElementById('editName').value = item.name;
+            document.getElementById('editPrice').value = item.price;
+            document.getElementById('editTime').value = item.time;
+            document.getElementById('editCategory').value = item.cat;
+        }
+
+        function deleteFoodItem(idx) {
+            if (confirm("Удалить это блюдо?")) {
+                menuData.splice(idx, 1);
+                localStorage.setItem('fishka_menu', JSON.stringify(menuData));
+                renderCategories();
+                renderMenu();
+                renderAdminFoodList();
+            }
+        }
+
+        function resetEditForm() {
+            document.getElementById('editIndex').value = "";
+            document.getElementById('editName').value = "";
+            document.getElementById('editPrice').value = "";
+            document.getElementById('editTime').value = "";
+            document.getElementById('editImageFile').value = "";
+        }
+
+        // ГЕНЕРАЦИЯ 40 QR-КОДОВ
+        function generateQRCodes() {
+            const grid = document.getElementById('qrGrid');
+            grid.innerHTML = "";
+            const baseUrl = window.location.href.split('?')[0];
+
+            for (let i = 1; i <= 40; i++) {
+                const card = document.createElement('div');
+                card.className = 'qr-card';
+                card.innerHTML = `<div id="qr_${i}"></div><strong style="margin-top:4px; display:block;">Стол №${i}</strong>`;
+                grid.appendChild(card);
+
+                new QRCode(document.getElementById(`qr_${i}`), {
+                    text: `${baseUrl}?table=${i}`,
+                    width: 100,
+                    height: 100
+                });
+            }
+        }
+
+        // СТАРТ
+        initTableNumber();
+        renderCategories();
+        renderMenu();
     </script>
 </body>
 </html>
+
