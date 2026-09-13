@@ -28,10 +28,6 @@
 
         body {
             background-color: var(--bg-color);
-            /* Добавляем паттерн из тарелок, вилок и ножей поверх черного фона */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23ffffff' fill-opacity='0.035'%3E%3C!-- Тарелка 1 --%3E%3Ccircle cx='35' cy='40' r='20' stroke='%23ffffff' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='35' cy='40' r='14' stroke='%23ffffff' stroke-width='0.8' fill='none'/%3E%3C!-- Вилка 1 --%3E%3Cpath d='M65 25 v12 m2-12 v12 m2-12 v12 m-4 0 q0 4 2 4 q2 0 2-4 v-12 m-2 16 v14' stroke='%23ffffff' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C!-- Нож 1 --%3E%3Cpath d='M75 25 q3 10 3 16 h-3 v14' stroke='%23ffffff' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C!-- Тарелка 2 --%3E%3Ccircle cx='125' cy='115' r='22' stroke='%23ffffff' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='125' cy='115' r='15' stroke='%23ffffff' stroke-width='0.8' fill='none'/%3E%3C!-- Вилка 2 --%3E%3Cpath d='M88 100 v10 m2-10 v10 m2-10 v10 m-4 0 q0 3 2 3 q2 0 2-3 v-10 m-2 13 v12' stroke='%23ffffff' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C!-- Нож 2 --%3E%3Cpath d='M97 100 q3 8 3 13 h-3 v12' stroke='%23ffffff' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-attachment: fixed;
             color: var(--text-main);
             padding-bottom: 90px;
         }
@@ -48,16 +44,16 @@
         }
 
         .logo-title {
+            margin-bottom: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 4px;
         }
 
         .logo-title svg {
-            width: 220px;
+            width: 240px;
             height: auto;
-            max-height: 70px;
+            max-width: 80vw;
         }
 
         .table-badge {
@@ -303,18 +299,15 @@
 
     <header>
         <div class="logo-title">
-            <!-- Логотип FiSHKA в форме рыбки -->
-            <svg viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Силуэт рыбки -->
-                <path d="M 20,50 C 60,10 210,10 260,50 C 285,25 305,15 310,10 C 305,35 305,65 310,90 C 305,85 285,75 260,50 C 210,90 60,90 20,50 Z" fill="%23ff9f0a" stroke="#ff9f0a" stroke-width="2" stroke-linejoin="round"/>
-                <!-- Верхний плавник -->
-                <path d="M 120,22 Q 150,0 180,18 Z" fill="#ff9f0a"/>
-                <!-- Нижний плавник -->
-                <path d="M 130,78 Q 160,100 180,82 Z" fill="#ff9f0a"/>
-                <!-- Глаз рыбки -->
-                <circle cx="45" cy="42" r="4" fill="#121214"/>
-                <!-- Надпись FiSHKA внутри рыбки -->
-                <text x="145" y="60" font-family="'Arial Black', sans-serif" font-weight="900" font-size="32" fill="#121214" text-anchor="middle" letter-spacing="2">FiSHKA</text>
+            <svg viewBox="0 0 350 110" xmlns="http://www.w3.org/2000/svg">
+                <!-- Силуэт акулы / рыбы -->
+                <path d="M 10,55 C 30,35 60,18 105,15 C 130,8 150,2 170,0 C 172,18 168,30 160,38 C 220,38 275,20 315,5 C 300,28 300,45 320,55 C 300,65 300,82 315,105 C 275,90 220,72 160,72 C 168,80 172,92 170,110 C 150,108 130,102 105,95 C 60,92 30,75 10,55 Z" fill="var(--text-main)" />
+                <!-- Плавник снизу -->
+                <path d="M 85,88 C 95,98 100,105 95,108 C 88,108 78,98 75,90 Z" fill="var(--text-main)" />
+                <!-- Текст FiSHKA, вырезанный внутри тела акулы -->
+                <text x="145" y="65" font-family="'Arial Black', Impact, sans-serif" font-weight="900" font-size="36" fill="var(--bg-color)" text-anchor="middle" letter-spacing="3">FiSHKA</text>
+                <!-- Глаз акулы -->
+                <circle cx="38" cy="48" r="3.5" fill="var(--bg-color)" />
             </svg>
         </div>
         <div class="table-badge" id="tableBadge">Столик №1</div>
