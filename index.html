@@ -6,6 +6,10 @@
     <title>FiSHKA — Меню и Заказ</title>
     <!-- Подключение QR-библиотеки для генерирования кодов высокого качества -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Подключение дерзкого акцентного шрифта Shojumaru для стилизации логотипа-акулы -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #121214;
@@ -43,17 +47,31 @@
             border-bottom: 1px solid var(--border-color);
         }
 
+        /* Стиль логотипа в форме акулы (резкие агрессивные плавники и зубцы) */
         .logo-title {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-color);
             margin-bottom: 4px;
-            display: flex;
-            justify-content: center;
+            font-family: 'Shojumaru', 'Arial Black', display, sans-serif;
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-shadow: 2px 2px 0px #000, -1px -1px 0px #000, 0px 4px 12px rgba(255, 159, 10, 0.4);
+            position: relative;
         }
 
-        .logo-title svg {
-            width: 240px;
-            height: auto;
-            max-width: 80vw;
+        /* Элемент акульего плавника над буквой */
+        .logo-title::after {
+            content: "🦈";
+            font-size: 28px;
+            margin-left: 4px;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.8));
+            transform: scaleX(-1) rotate(-10deg);
+            display: inline-block;
         }
 
         .table-badge {
@@ -298,18 +316,7 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <div class="logo-title">
-            <svg viewBox="0 0 350 110" xmlns="http://www.w3.org/2000/svg">
-                <!-- Силуэт акулы / рыбы -->
-                <path d="M 10,55 C 30,35 60,18 105,15 C 130,8 150,2 170,0 C 172,18 168,30 160,38 C 220,38 275,20 315,5 C 300,28 300,45 320,55 C 300,65 300,82 315,105 C 275,90 220,72 160,72 C 168,80 172,92 170,110 C 150,108 130,102 105,95 C 60,92 30,75 10,55 Z" fill="var(--text-main)" />
-                <!-- Плавник снизу -->
-                <path d="M 85,88 C 95,98 100,105 95,108 C 88,108 78,98 75,90 Z" fill="var(--text-main)" />
-                <!-- Текст FiSHKA, вырезанный внутри тела акулы -->
-                <text x="145" y="65" font-family="'Arial Black', Impact, sans-serif" font-weight="900" font-size="36" fill="var(--bg-color)" text-anchor="middle" letter-spacing="3">FiSHKA</text>
-                <!-- Глаз акулы -->
-                <circle cx="38" cy="48" r="3.5" fill="var(--bg-color)" />
-            </svg>
-        </div>
+        <div class="logo-title">FiSHKA</div>
         <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
