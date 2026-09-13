@@ -1,383 +1,559 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Финансовая Грамотность для Подростков</title>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- FontAwesome icons CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Canvas Confetti CDN -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishka - Онлайн Меню & Заказ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Библиотека для генерации QR-кодов -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #121214;
+            --bg-card: #1e1e22;
+            --bg-elevated: #282830;
+            --accent-gold: #ffb703;
+            --accent-green: #2ec4b6;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --text-muted: #6c757d;
+            --border-color: #2b2b32;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            padding-bottom: 110px;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .header-container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-title {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .table-badge {
+            background: linear-gradient(135deg, var(--accent-gold), #f77f00);
+            color: #000;
+            font-weight: 800;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(255, 183, 3, 0.3);
+        }
+
+        /* CATEGORIES NAV */
+        .categories-nav {
+            background: var(--bg-main);
+            padding: 12px 16px;
+            position: sticky;
+            top: 65px;
+            z-index: 99;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border-color);
+            scrollbar-width: none;
+        }
+
+        .categories-nav::-webkit-scrollbar { display: none; }
+
+        .categories-container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .cat-btn {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cat-btn.active {
+            background: var(--accent-gold);
+            color: #121214;
+            border-color: var(--accent-gold);
+            box-shadow: 0 2px 10px rgba(255, 183, 3, 0.25);
+        }
+
+        /* MAIN CONTENT */
+        main {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 20px 0 12px 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .food-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .food-img {
+            width: 90px;
+            height: 90px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            background-color: var(--bg-elevated);
+            flex-shrink: 0;
+        }
+
+        .food-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .food-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .food-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .food-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .food-price {
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .add-btn {
+            background-color: var(--accent-gold);
+            color: #121214;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-elevated);
+            border-radius: 20px;
+            padding: 3px 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-qty {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 700;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .btn-qty.plus { color: var(--accent-gold); }
+
+        .qty-num {
+            font-size: 14px;
+            font-weight: 700;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        /* BOTTOM CART BAR */
+        .cart-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background-color: rgba(30, 30, 34, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 16px;
+            z-index: 1000;
+        }
+
+        .cart-bar-container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cart-total-price {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .cart-time-est {
+            font-size: 12px;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .btn-checkout {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* QR FOLDER SECTION */
+        .qr-section {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .qr-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-card h4 { font-size: 13px; color: var(--accent-gold); }
+        .qr-code-img { background: white; padding: 6px; border-radius: var(--radius-sm); }
+
+        .footer-nav { text-align: center; margin-top: 30px; padding: 10px; }
+        .admin-link { color: var(--text-muted); font-size: 12px; text-decoration: underline; cursor: pointer; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased flex flex-col justify-between">
+<body>
 
-<!-- Header -->
-<header class="bg-slate-800 border-b border-slate-700 py-4 px-6 sticky top-0 z-50 shadow-md">
-<div class="max-w-4xl mx-auto flex justify-between items-center">
-<div class="flex items-center space-x-3">
-<div class="bg-indigo-600 p-2 rounded-xl text-white">
-<i class="fa-solid me-1 fa-wallet text-xl"></i>
-</div>
-<h1 class="text-xl font-bold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-ФинГрамота 2.0
-</h1>
-</div>
-<span class="text-xs bg-slate-700 text-slate-300 py-1 px-3 rounded-full font-medium">Курс для подростков</span>
-</div>
-</header>
+    <header>
+        <div class="header-container">
+            <div class="logo-title">FISHKA</div>
+            <div class="table-badge">
+                <span>📍</span> <span id="tableLabel">Стол не выбран</span>
+            </div>
+        </div>
+    </header>
 
-<!-- Main Container -->
-<main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow">
+    <nav class="categories-nav">
+        <div class="categories-container" id="categoriesContainer"></div>
+    </nav>
 
-<!-- STEP 1: THEORY SECTION -->
-<section id="theory-section" class="space-y-8">
-<div class="text-center space-y-3">
-<h2 class="text-3xl font-extrabold text-white">Модуль 1: Теория финансов 📚</h2>
-<p class="text-slate-400 text-sm max-w-xl mx-auto">Изучи правила обращения с деньгами, чтобы научиться управлять личным бюджетом, а не тратить все в первый же день.</p>
-</div>
+    <main id="mainMenu"></main>
 
-<!-- Block 1 -->
-<div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">
-<div class="flex items-center space-x-3 text-indigo-400">
-<i class="fa-solid fa-coins text-2xl"></i>
-<h3 class="text-xl font-bold text-white">1. Что такое финансы и карманные деньги?</h3>
-</div>
-<p class="text-slate-300 leading-relaxed text-sm">
-Карманные деньги — это твой первый личный капитал. Главный секрет богатства заключается не в том, сколько ты получаешь, а в том, сколько у тебя остается.
-</p>
-<div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50">
-<h4 class="font-semibold text-indigo-300 text-sm mb-2">Золотое правило: "Сначала заплати себе" (50/30/20)</h4>
-<ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
-<li><strong class="text-slate-200">50%</strong> — Важные базовые расходы (транспорт, перекус в школе, нужные вещи).</li>
-<li><strong class="text-slate-200">30%</strong> — Хотелки и развлечения (кино, игры, тусовки с друзьями).</li>
-<li><strong class="text-slate-200">20%</strong> — Накопления (твой неприкосновенный запас/инвестиции).</li>
-</ul>
-</div>
-</div>
+    <div class="qr-section" id="qrSection">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 style="color:var(--accent-gold); font-size: 18px;">Папка: QR-коды (30 столов)</h2>
+            <button onclick="hideQRSection()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">✖</button>
+        </div>
+        <p style="font-size:12px; color:var(--text-secondary);">Распечатайте эти QR-коды для столов. Гость отсканирует код и отправит вам заказ с указанием своего стола.</p>
+        <div class="qr-grid" id="qrGrid"></div>
+    </div>
 
-<!-- Block 2 -->
-<div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">
-<div class="flex items-center space-x-3 text-cyan-400">
-<i class="fa-solid fa-fire text-2xl"></i>
-<h3 class="text-xl font-bold text-white">2. Импульсивные покупки и Капиталовложения</h3>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 space-y-2">
-<span class="text-red-400 font-bold text-sm flex items-center gap-2">
-<i class="fa-solid fa-ban"></i> Импульсивные покупки
-</span>
-<p class="text-xs text-slate-300">
-Траты под влиянием эмоций (увидел чипсы/скин в игре и сразу купил).
-<strong>Лайфхак:</strong> Правило 24 часов. Хочешь купить нераспланированную вещь? Подожди сутки. В 80% случаев желание пройдет!
-</p>
-</div>
-<div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 space-y-2">
-<span class="text-emerald-400 font-bold text-sm flex items-center gap-2">
-<i class="fa-solid fa-chart-line"></i> Капиталовложения (Инвестиции)
-</span>
-<p class="text-xs text-slate-300">
-Вложение денег и времени в то, что приносит доход или пользу в будущем. Для подростков лучшая инвестиция — знания, курсы, техника для работы/учебы и накопительные банковские счета.
-</p>
-</div>
-</div>
-</div>
+    <div class="footer-nav">
+        <span class="admin-link" onclick="promptAdminLogin()">📁 Папка QR-коды (Для владельца)</span>
+    </div>
 
-<div class="text-center pt-4">
-<button onclick="startQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-lg shadow-indigo-600/30 transform hover:-translate-y-0.5">
-Перейти к Тесту <i class="fa-solid fa-arrow-right ml-2"></i>
-</button>
-</div>
-</section>
+    <div class="cart-bar" id="cartBar" style="display: none;">
+        <div class="cart-bar-container">
+            <div>
+                <div class="cart-total-price" id="cartTotalPrice">0 ₽</div>
+                <div class="cart-time-est">⏱ ~<span id="cartTotalTime">0</span> мин готовка</div>
+            </div>
+            <button class="btn-checkout" onclick="sendWhatsAppOrder()">Заказать в WhatsApp ➔</button>
+        </div>
+    </div>
 
-<!-- STEP 2: QUIZ SECTION -->
-<section id="quiz-section" class="hidden space-y-6">
-<div class="flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-slate-700">
-<span class="text-xs text-slate-400">Прогресс теста:</span>
-<span id="quiz-counter" class="text-sm font-bold text-indigo-400">Вопрос 1 из 5</span>
-</div>
+    <script>
+        const OWNER_WHATSAPP = "79681755402";
+        const ADMIN_PIN = "54321";
 
-<div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
-<h3 id="quiz-question" class="text-lg font-bold text-white"></h3>
-<div id="quiz-options" class="space-y-3">
-<!-- Options injected by JS -->
-</div>
-</div>
-</section>
+        const menuData = [
+            {
+                category: "Роллы",
+                items: [
+                    { id: 101, name: "Горячий шик", price: 300, time: 15, img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300&auto=format&fit=crop&q=60" },
+                    { id: 102, name: "Бешеный лосось", price: 300, time: 15, img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=300&auto=format&fit=crop&q=60" },
+                    { id: 103, name: "Калифорния краб", price: 250, time: 12, img: "https://images.unsplash.com/photo-1553621042-f6e147245754?w=300&auto=format&fit=crop&q=60" },
+                    { id: 104, name: "Филадельфия", price: 300, time: 15, img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300&auto=format&fit=crop&q=60" },
+                    { id: 105, name: "Цезарь темпура", price: 300, time: 18, img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=300&auto=format&fit=crop&q=60" }
+                ]
+            },
+            {
+                category: "Фаст-Фуд",
+                items: [
+                    { id: 201, name: "Гамбургер куриный", price: 130, time: 10, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&auto=format&fit=crop&q=60" },
+                    { id: 202, name: "Чизбургер говяжий", price: 150, time: 10, img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=300&auto=format&fit=crop&q=60" },
+                    { id: 203, name: "Бургер Fishka", price: 200, time: 12, img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=300&auto=format&fit=crop&q=60" },
+                    { id: 204, name: "Хот-дог", price: 120, time: 7, img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=300&auto=format&fit=crop&q=60" },
+                    { id: 205, name: "Шаурма", price: 200, time: 10, img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=300&auto=format&fit=crop&q=60" },
+                    { id: 206, name: "Картошка фри", price: 130, time: 8, img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300&auto=format&fit=crop&q=60" }
+                ]
+            },
+            {
+                category: "Пиццы & Горячее",
+                items: [
+                    { id: 301, name: 'Пицца "Грибная"', price: 350, time: 20, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&auto=format&fit=crop&q=60" },
+                    { id: 302, name: "Хачапури с сыром", price: 300, time: 18, img: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=300&auto=format&fit=crop&q=60" },
+                    { id: 303, name: "Шашлык", price: 430, time: 20, img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&auto=format&fit=crop&q=60" }
+                ]
+            },
+            {
+                category: "Напитки",
+                items: [
+                    { id: 401, name: "Айс латте", price: 250, time: 5, img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&auto=format&fit=crop&q=60" },
+                    { id: 402, name: "Лимонад Клубничный", price: 180, time: 5, img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300&auto=format&fit=crop&q=60" },
+                    { id: 403, name: "Чай Малина-имбирь", price: 300, time: 7, img: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300&auto=format&fit=crop&q=60" }
+                ]
+            }
+        ];
 
-<!-- STEP 3: MINI-GAME EXAM SECTION -->
-<section id="game-section" class="hidden space-y-6">
-<div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
-<div class="border-b border-slate-700 pb-4 flex justify-between items-center">
-<div>
-<h2 class="text-2xl font-bold text-white">Модуль 2: Практический экзамен 🎮</h2>
-<p class="text-xs text-slate-400">Симулятор бюджетирования на 1 месяц</p>
-</div>
-<div class="text-right">
-<span class="text-xs text-slate-400">Твой бюджет:</span>
-<div id="game-budget" class="text-xl font-black text-emerald-400">10 000 ₽</div>
-</div>
-</div>
+        let cart = {};
+        let currentTable = null;
 
-<div id="game-content" class="space-y-4">
-<!-- Dynamic Game Situation -->
-</div>
-</div>
-</section>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentTable = urlParams.get('table');
+            document.getElementById('tableLabel').innerText = currentTable ? `Столик №${currentTable}` : `Стол не выбран`;
 
-<!-- RESULT SUCCESS SECTION -->
-<section id="success-section" class="hidden text-center py-12 space-y-6">
-<div class="inline-flex p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400 mb-2">
-<i class="fa-solid fa-trophy text-6xl"></i>
-</div>
-<h2 class="text-3xl font-black text-white">Поздравляем! Курс успешно пройден!</h2>
-<p class="text-slate-300 max-w-md mx-auto text-sm">
-Ты отлично справился и с теорией, и с практическим симулятором. Теперь ты знаешь, как разумно распоряжаться финансами!
-</p>
-<div id="final-stats" class="bg-slate-800 border border-slate-700 rounded-xl p-4 max-w-sm mx-auto text-left space-y-2 text-xs">
-<!-- Stats injected by JS -->
-</div>
-<button onclick="location.reload()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-xl transition">
-Пройти курс заново
-</button>
-</section>
+            renderCategories();
+            renderMenu();
+        });
 
-<!-- RESULT FAIL SECTION -->
-<section id="fail-section" class="hidden text-center py-12 space-y-6">
-<div class="inline-flex p-6 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 mb-2">
-<i class="fa-solid fa-rotate-right text-6xl"></i>
-</div>
-<h2 class="text-3xl font-black text-white">Экзамен не сдан!</h2>
-<p id="fail-reason" class="text-slate-300 max-w-md mx-auto text-sm">
-К сожалению, набранных баллов недостаточно для получения сертификата.
-</p>
-<div class="bg-slate-800 border border-slate-700 rounded-xl p-4 max-w-sm mx-auto text-slate-400 text-xs text-left">
-<strong>Правило курса:</strong> Чтобы успешно пройти курс, необходимо набрать не менее 80% в тесте и успешно сдать практическую мини-игру.
-</div>
-<button onclick="restartCourse()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg shadow-indigo-600/30">
-Пройти курс еще раз
-</button>
-</section>
+        function renderCategories() {
+            document.getElementById('categoriesContainer').innerHTML = menuData.map((cat, idx) => `
+                <button class="cat-btn ${idx === 0 ? 'active' : ''}" onclick="scrollToCategory('${cat.category}', this)">
+                    ${cat.category}
+                </button>
+            `).join('');
+        }
 
-</main>
+        function scrollToCategory(catName, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const el = document.getElementById(`cat-${catName}`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
-<!-- Footer -->
-<footer class="bg-slate-800 border-t border-slate-700 py-4 px-6 text-center text-xs text-slate-500">
-Интерактивный учебный курс по финансовой грамотности для подростков
-</footer>
+        function renderMenu() {
+            let html = '';
+            menuData.forEach(cat => {
+                html += `<div id="cat-${cat.category}"><div class="section-title">${cat.category}</div><div class="menu-grid">`;
+                cat.items.forEach(item => {
+                    const qty = cart[item.id] || 0;
+                    html += `
+                        <div class="food-card">
+                            <img src="${item.img}" class="food-img" alt="${item.name}">
+                            <div class="food-info">
+                                <div>
+                                    <div class="food-name">${item.name}</div>
+                                    <div class="food-meta">⏱ ~${item.time} мин</div>
+                                </div>
+                                <div class="food-bottom">
+                                    <div class="food-price">${item.price} ₽</div>
+                                    <div id="control-${item.id}">
+                                        ${qty > 0 ? renderCounter(item.id, qty) : `<button class="add-btn" onclick="updateQty(${item.id}, 1)">+ Добавить</button>`}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            });
+            document.getElementById('mainMenu').innerHTML = html;
+        }
 
-<!-- Logic JS -->
-<script>
-// --- QUIZ DATA ---
-const quizQuestions = [
-{
-q: "Какое главное правило распределения карманных денег по системе 50/30/20?",
-options: [
-"50% на игры, 30% на еду, 20% отдавать друзьям",
-"50% на нужды, 30% на хотелки, 20% в накопления",
-"100% тратить сразу, пока не обесценились"
- ],
-correct: 1
-},
-{
-q: "Что из перечисленного является «Импульсивной покупкой»?",
-options: [
-"Покупка заранее запланированного учебника",
-"Внезапная покупка дорогого скина в игре под влиянием эмоций",
-"Оплата проезда в автобусе"
- ],
-correct: 1
-},
-{
-q: "Как правильно поступить, если захотелось купить дорогой гаджет вне плана?",
-options: [
-"Воспользоваться «Правилом 24 часов» и обдумать покупку завтра",
-"Сразу потратить все сбережения",
-"Взять в долг у всех знакомых"
- ],
-correct: 0
-},
-{
-q: "Что такое «Капиталовложение» для подростка?",
-options: [
-"Покупка 10 пачек чипсов",
-"Вложение денег в полезные знания, курсы или технику для учебы",
-"Покупка билета в лотерею"
- ],
-correct: 1
-},
-{
-q: "Если у тебя остались свободные деньги в конце месяца, что с ними разумнее сделать?",
-options: [
-"Быстро всё потратить на сладости",
-"Отложить в накопления/инвестиционный запас",
-"Выбросить"
- ],
-correct: 1
-}
-];
+        function renderCounter(id, qty) {
+            return `
+                <div class="counter-controls">
+                    <button class="btn-qty" onclick="updateQty(${id}, -1)">−</button>
+                    <span class="qty-num">${qty}</span>
+                    <button class="btn-qty plus" onclick="updateQty(${id}, 1)">+</button>
+                </div>
+            `;
+        }
 
-let currentQuestion = 0;
-let quizScore = 0;
+        function updateQty(id, delta) {
+            const next = (cart[id] || 0) + delta;
+            if (next <= 0) delete cart[id];
+            else cart[id] = next;
 
-// --- MINI GAME DATA ---
-let gameStep = 0;
-let userBudget = 10000;
-let gameChoices = [];
+            const ctrl = document.getElementById(`control-${id}`);
+            if (ctrl) ctrl.innerHTML = (cart[id] || 0) > 0 ? renderCounter(id, cart[id]) : `<button class="add-btn" onclick="updateQty(${id}, 1)">+ Добавить</button>`;
+            updateCartBar();
+        }
 
-const gameScenarios = [
-{
-title: "Ситуация 1: Обязательные расходы",
-desc: "Начало месяца! Тебе нужно оплатить проездной и школьные обеды на месяц вперед. Это стоит 3 000 ₽.",
-options: [
-{ text: "Оплатить сразу (3 000 ₽)", cost: 3000, score: 20, msg: "Отлично! Важные потребности оплачены вовремя." },
-{ text: "Забить и покупать фастфуд каждый день (~5 000 ₽)", cost: 5000, score: 0, msg: "Плохая идея, ты переплатишь и останешься без проездного!" }
- ]
-},
-{
-title: "Ситуация 2: Соблазн и Хобби",
-desc: "Друзья зовут в кино и на развлечения. Расходы состоят из 1 500 ₽.",
-options: [
-{ text: "Пойти и выделять лимит (1 500 ₽)", cost: 1500, score: 20, msg: "Хороший баланс между отдыхом и бюджетом!" },
-{ text: "Купить всем угощения на 4 500 ₽", cost: 4500, score: 0, msg: "Слишком большие эмоциональные траты!" }
- ]
-},
-{
-title: "Ситуация 3: Неожиданная проблема",
-desc: "У тебя разбился защитный экран на телефоне. Ремонт стоит 1 500 ₽.",
-options: [
-{ text: "Оплатить ремонт из оставшихся средств (1 500 ₽)", cost: 1500, score: 20, msg: "Правильно, ведь гаджет нужен для учебы и связи." },
-{ text: "Игнорировать и купить скин в игре (1 500 ₽)", cost: 1500, score: 0, msg: "Неразумно, телефон может сломаться окончательно." }
- ]
-}
-];
+        function updateCartBar() {
+            let totalSum = 0, maxTime = 0, totalItems = 0;
+            menuData.forEach(cat => {
+                cat.items.forEach(item => {
+                    if (cart[item.id]) {
+                        const qty = cart[item.id];
+                        totalSum += item.price * qty;
+                        totalItems += qty;
+                        if (item.time > maxTime) maxTime = item.time;
+                    }
+                });
+            });
 
-let totalGameScore = 0;
+            const bar = document.getElementById('cartBar');
+            if (totalItems > 0) {
+                bar.style.display = 'block';
+                document.getElementById('cartTotalPrice').innerText = `${totalSum} ₽`;
+                document.getElementById('cartTotalTime').innerText = maxTime;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
 
-// --- NAVIGATION & LOGIC ---
+        function sendWhatsAppOrder() {
+            const tableStr = currentTable ? `СТОЛИК №${currentTable}` : `НЕ УКАЗАН`;
+            let text = `📋 *НОВЫЙ ЗАКАЗ — FISHKA*\n📍 *${tableStr}*\n--------------------------------\n`;
 
-function startQuiz() {
-document.getElementById('theory-section').classList.add('hidden');
-document.getElementById('quiz-section').classList.remove('hidden');
-showQuestion();
-}
+            let totalSum = 0, maxTime = 0;
+            menuData.forEach(cat => {
+                cat.items.forEach(item => {
+                    if (cart[item.id]) {
+                        const qty = cart[item.id];
+                        const cost = item.price * qty;
+                        totalSum += cost;
+                        if (item.time > maxTime) maxTime = item.time;
+                        text += `• ${item.name} x${qty} = ${cost} ₽\n`;
+                    }
+                });
+            });
 
-function showQuestion() {
-const q = quizQuestions[currentQuestion];
-document.getElementById('quiz-counter').innerText = Вопрос ${currentQuestion + 1} из ${quizQuestions.length};
-document.getElementById('quiz-question').innerText = q.q;
+            text += `--------------------------------\n💰 *Итого:* ${totalSum} ₽\n⏱ *Время:* ~${maxTime} мин\n`;
+            window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(text)}`, '_blank');
+        }
 
-const optsDiv = document.getElementById('quiz-options');
-optsDiv.innerHTML = '';
+        function promptAdminLogin() {
+            if (prompt("Введите пароль к папке QR-кодов:") === ADMIN_PIN) showQRSection();
+            else alert("Неверный пароль!");
+        }
 
-q.options.forEach((opt, idx) => {
-const btn = document.createElement('button');
-btn.className = "w-full text-left bg-slate-700/60 hover:bg-indigo-600/30 border border-slate-600 hover:border-indigo-500 p-4 rounded-xl transition duration-150 text-slate-200 text-sm flex items-center justify-between group";
-btn.innerHTML = <span&gt;${opt}</span> <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-indigo-400"></i>`;
-btn.onclick = () => selectAnswer(idx);
-optsDiv.appendChild(btn);
-});
-}
+        function showQRSection() {
+            const sec = document.getElementById('qrSection');
+            sec.style.display = 'block';
+            sec.scrollIntoView({ behavior: 'smooth' });
 
-function selectAnswer(idx) {
-if (idx === quizQuestions[currentQuestion].correct) {
-quizScore++;
-}
-currentQuestion++;
-if (currentQuestion < quizQuestions.length) {
-showQuestion();
-} else {
-finishQuiz();
-}
-}
+            const grid = document.getElementById('qrGrid');
+            if (grid.children.length === 0) {
+                const baseUrl = window.location.href.split('?')[0];
+                for (let i = 1; i <= 30; i++) {
+                    const tableUrl = `${baseUrl}?table=${i}`;
+                    const card = document.createElement('div');
+                    card.className = 'qr-card';
+                    card.innerHTML = `<h4>Столик №${i}</h4><div id="qrcode-${i}"></div>`;
+                    grid.appendChild(card);
+                    new QRCode(document.getElementById(`qrcode-${i}`), { text: tableUrl, width: 90, height: 90 });
+                }
+            }
+        }
 
-function finishQuiz() {
-document.getElementById('quiz-section').classList.add('hidden');
-const percent = (quizScore / quizQuestions.length) * 100;
-
-if (percent < 80) {
-showFail(Вы ответили правильно только на${quizScore} из {percent}%). Для прохождения требуется минимум 80%.`);
-} else {
-startGame();
-}
-}
-
-function startGame() {
-document.getElementById('game-section').classList.remove('hidden');
-renderGameStep();
-}
-
-function renderGameStep() {
-document.getElementById('game-budget').innerText = ${userBudget.toLocaleString()} ₽`;
-const content = document.getElementById('game-content');
-
-if (gameStep < gameScenarios.length) {
-const current = gameScenarios[gameStep];
-let html = &lt;div class="space-y-3"&gt; &lt;h4 class="text-lg font-bold text-indigo-300"&gt;${current.title}</h4>
-<p class="text-sm text-slate-300">latex
-{current.desc}&lt;/p&gt; &lt;div class="grid grid-cols-1 gap-3 pt-2"&gt; `; current.options.forEach((opt, idx) =&gt; { html += ` &lt;button onclick="makeGameChoice(
-
-{idx})" class="w-full text-left bg-slate-700 hover:bg-slate-600 p-4 rounded-xl border border-slate-600 transition text-sm">
-<div class="font-semibold text-white">${opt.text}&lt;/div&gt; &lt;/button&gt;;
-});
-html += </div&gt;&lt;/div>;
-content.innerHTML = html;
-} else {
-finishGame();
-}
-}
-
-function makeGameChoice(optionIdx) {
-const scenario = gameScenarios[gameStep];
-const choice = scenario.options[optionIdx];
-
-userBudget -= choice.cost;
-totalGameScore += choice.score;
-
-gameStep++;
-renderGameStep();
-}
-
-function finishGame() {
-document.getElementById('game-section').classList.add('hidden');
-
-// Pass conditions: quiz >= 80% AND budget remaining > 0 AND score >= 40
-if (userBudget >= 1000 && totalGameScore >= 40) {
-showSuccess();
-} else {
-showFail(Вы израсходовали весь бюджет или приняли слишком много нерациональных решений во время экзамена.);
-}
-}
-
-function showSuccess() {
-document.getElementById('success-section').classList.remove('hidden');
-document.getElementById('final-stats').innerHTML = &lt;div&gt;• Тест: &lt;strong class="text-emerald-400"&gt;${(quizScore/quizQuestions.length)*100}%</strong> (Пройден)</div>
-<div>• Остаток бюджета: <strong class="text-emerald-400">${userBudget.toLocaleString()} ₽</strong></div>
-<div>• Оценка финансовой грамотности: <strong class="text-emerald-400">Отлично</strong></div>
-`;
-confetti({
-particleCount: 100,
-spread: 70,
-origin: { y: 0.6 }
-});
-}
-
-function showFail(reason) {
-document.getElementById('fail-reason').innerText = reason;
-document.getElementById('fail-section').classList.remove('hidden');
-}
-
-function restartCourse() {
-currentQuestion = 0;
-quizScore = 0;
-gameStep = 0;
-userBudget = 10000;
-totalGameScore = 0;
-
-document.getElementById('fail-section').classList.add('hidden');
-document.getElementById('theory-section').classList.remove('hidden');
-}
-</script>
+        function hideQRSection() { document.getElementById('qrSection').style.display = 'none'; }
+    </script>
 </body>
 </html>
