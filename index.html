@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FiSHKA — Меню и Заказ</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Подключаем рукописный шрифт для максимального сходства с логотипом -->
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #121214;
@@ -17,7 +15,7 @@
             --border-color: #2c2c30;
             --danger-color: #ff453a;
             --success-color: #30d158;
-            --shark-green: #5ec269;
+            --shark-green: #6ee06e;
         }
 
         * {
@@ -34,10 +32,10 @@
             padding-bottom: 90px;
         }
 
-        /* HEADER & LOGO */
+        /* HEADER */
         header {
             background: linear-gradient(180deg, #1c1c1e 0%, var(--bg-color) 100%);
-            padding: 20px 16px 10px;
+            padding: 18px 16px 10px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -45,68 +43,60 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* ====== ЛОГОТИП-АКУЛА (точная стилизация под фото) ====== */
-        .logo-shark {
+        /* ===== ЛОГОТИП-АКУЛА (как на фото) ===== */
+        .logo-wrap {
             display: inline-block;
-            position: relative;
             margin-bottom: 6px;
-            filter: drop-shadow(0 4px 14px rgba(94, 194, 105, 0.25));
-            transition: transform 0.3s ease;
         }
-
-        .logo-shark:hover {
-            transform: scale(1.03);
-        }
-
-        .shark-svg {
-            width: 280px;
-            height: auto;
+        .logo-svg {
+            width: 240px;
+            height: 240px;
             display: block;
+            filter: drop-shadow(0 6px 18px rgba(110, 224, 110, 0.25));
         }
-
-        /* Плавное покачивание всего логотипа, как акула плывёт */
+        /* лёгкое покачивание всей акулы */
         .shark-body {
             animation: sharkSwim 4s ease-in-out infinite;
-            transform-origin: center center;
+            transform-origin: 50% 50%;
         }
-
         @keyframes sharkSwim {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-2px) rotate(-1deg); }
+            50% { transform: translateY(-3px) rotate(-1.5deg); }
         }
-
-        /* Хвост покачивается отдельно */
+        /* хвост виляет */
         .shark-tail {
-            animation: tailWave 2.2s ease-in-out infinite;
-            transform-origin: 60px 60px;
+            animation: tailWag 2s ease-in-out infinite;
+            transform-origin: 190px 150px;
         }
-
-        @keyframes tailWave {
+        @keyframes tailWag {
             0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-6deg); }
+            50% { transform: rotate(6deg); }
         }
-
-        /* Глаз-точка над буквой i мигает */
-        .shark-eye-dot {
-            animation: eyeBlink 4s infinite;
+        /* плавник-спинка */
+        .shark-fin {
+            animation: finBob 3s ease-in-out infinite;
+            transform-origin: 150px 110px;
         }
-
-        @keyframes eyeBlink {
-            0%, 92%, 100% { opacity: 1; }
-            95% { opacity: 0.1; }
+        @keyframes finBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
         }
-
-        /* Пузырьки */
-        .bubble {
-            animation: bubbleFloat 3.5s ease-in infinite;
+        /* глаз */
+        .shark-eye {
+            animation: blinkEye 5s infinite;
         }
-        .bubble:nth-child(2) { animation-delay: 1.2s; }
-        .bubble:nth-child(3) { animation-delay: 2.4s; }
-
-        @keyframes bubbleFloat {
-            0% { opacity: 0; transform: translate(0, 0); }
-            20% { opacity: 0.7; }
-            100% { opacity: 0; transform: translate(-6px, -25px); }
+        @keyframes blinkEye {
+            0%, 92%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        /* пузырьки */
+        .bubble { animation: bubbleUp 4s ease-in infinite; }
+        .bubble:nth-child(2) { animation-delay: 1.3s; }
+        .bubble:nth-child(3) { animation-delay: 2.6s; }
+        @keyframes bubbleUp {
+            0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+            20% { opacity: 0.9; }
+            100% { opacity: 0; transform: translate(-6px, -34px) scale(1.1); }
         }
 
         .table-badge {
@@ -128,6 +118,9 @@
             padding: 12px 16px;
             background-color: var(--bg-color);
             scrollbar-width: none;
+            position: sticky;
+            top: 0;
+            z-index: 90;
         }
         .categories-scroll::-webkit-scrollbar { display: none; }
 
@@ -152,17 +145,40 @@
 
         /* MENU LIST & CARDS */
         .menu-container {
-            padding: 16px;
+            padding: 8px 16px 16px;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .section-title {
+        /* Заголовок категории-разделителя */
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 22px 0 12px;
+            padding: 0 2px;
+        }
+        .category-header::before {
+            content: "";
+            width: 4px;
+            height: 22px;
+            background: var(--accent-color);
+            border-radius: 2px;
+            display: inline-block;
+        }
+        .category-header::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-color), transparent);
+            margin-left: 6px;
+        }
+        .category-title {
             font-size: 20px;
-            margin: 16px 0 12px;
+            font-weight: 800;
             color: var(--text-main);
-            border-left: 4px solid var(--accent-color);
-            padding-left: 8px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .food-card {
@@ -351,118 +367,109 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <!-- ====== ЛОГОТИП-АКУЛА, ПОВТОРЯЮЩИЙ ФОРМУ С ФОТО ====== -->
-        <div class="logo-shark">
-            <svg class="shark-svg" viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg" aria-label="FiSHKA — логотип в форме акулы">
+        <!-- ====== ЛОГОТИП-АКУЛА (в круге, как на фото) ====== -->
+        <div class="logo-wrap">
+            <svg class="logo-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" aria-label="FiSHKA — логотип-акула">
                 <defs>
-                    <!-- Градиент тела акулы (зелёный, как на фото, но адаптирован) -->
-                    <linearGradient id="sharkBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#5ec269"/>
-                        <stop offset="50%" stop-color="#4db35a"/>
-                        <stop offset="100%" stop-color="#5ec269"/>
-                    </linearGradient>
-                    <!-- Градиент заливки букв (оранжевый под тему сайта) -->
-                    <linearGradient id="letterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#ffb84d"/>
-                        <stop offset="100%" stop-color="#ff9f0a"/>
-                    </linearGradient>
-                    <!-- Свечение -->
-                    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-                        <feGaussianBlur stdDeviation="2.5" result="blur"/>
-                        <feMerge>
-                            <feMergeNode in="blur"/>
-                            <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                    </filter>
+                    <clipPath id="circleClip">
+                        <circle cx="130" cy="130" r="118"/>
+                    </clipPath>
                 </defs>
 
-                <!-- ===== ТЕЛО-СИЛУЭТ АКУЛЫ (охватывает все буквы) ===== -->
-                <g class="shark-body">
-                    <!-- Хвост (слева) — характерный плавник акулы -->
-                    <g class="shark-tail">
-                        <path d="M 75 55 
-                                 Q 45 25 18 12 
-                                 Q 40 42 22 78 
-                                 Q 55 65 75 70 Z" 
-                              fill="url(#sharkBodyGrad)" opacity="0.95"/>
+                <!-- Белый круг -->
+                <circle cx="130" cy="130" r="125" fill="#ffffff"/>
+                <!-- Зелёная обводка -->
+                <circle cx="130" cy="130" r="120" fill="none" stroke="#6ee06e" stroke-width="9"/>
+
+                <!-- ===== АКУЛА (тело из букв) ===== -->
+                <g clip-path="url(#circleClip)">
+                    <g class="shark-body">
+                        <!-- ХВОСТ (слева, острый треугольник) -->
+                        <g class="shark-tail">
+                            <path d="M 60 128 
+                                     L 22 108 
+                                     Q 40 128 22 150 
+                                     L 60 132 Z" 
+                                  fill="#000000"/>
+                            <!-- внутренняя линия хвоста -->
+                            <path d="M 55 128 L 30 118 Q 42 128 30 140 L 55 130 Z" 
+                                  fill="#ffffff" opacity="0.15"/>
+                        </g>
+
+                        <!-- СПИННОЙ ПЛАВНИК (над головой) -->
+                        <g class="shark-fin">
+                            <path d="M 175 90 
+                                     Q 190 62 210 78 
+                                     Q 200 88 195 100 Z" 
+                                  fill="#000000"/>
+                        </g>
+
+                        <!-- ТЕЛО + НАДПИСЬ FiSHKA (стилизованная акула) -->
+                        <!-- Буква F (с наклоном, как голова акулы) -->
+                        <text x="72" y="160" 
+                              font-family="'Arial Black', 'Impact', sans-serif" 
+                              font-size="72" font-weight="900" 
+                              fill="#000000" 
+                              transform="rotate(-8 90 140)"
+                              style="letter-spacing:-4px;">F</text>
+
+                        <!-- Буква i с точкой -->
+                        <circle cx="128" cy="98" r="6" fill="#000000"/>
+                        <text x="118" y="160" 
+                              font-family="'Arial Black', 'Impact', sans-serif" 
+                              font-size="72" font-weight="900" 
+                              fill="#000000"
+                              style="letter-spacing:-4px;">i</text>
+
+                        <!-- Буква S -->
+                        <text x="138" y="160" 
+                              font-family="'Arial Black', 'Impact', sans-serif" 
+                              font-size="72" font-weight="900" 
+                              fill="#000000"
+                              style="letter-spacing:-4px;">S</text>
+
+                        <!-- Буква H -->
+                        <text x="182" y="160" 
+                              font-family="'Arial Black', 'Impact', sans-serif" 
+                              font-size="72" font-weight="900" 
+                              fill="#000000"
+                              style="letter-spacing:-4px;">H</text>
+
+                        <!-- Буква K -->
+                        <text x="225" y="160" 
+                              font-family="'Arial Black', 'Impact', sans-serif" 
+                              font-size="72" font-weight="900" 
+                              fill="#000000"
+                              style="letter-spacing:-4px;">K</text>
+
+                        <!-- Буква A с хвостиком-плавником -->
+                        <text x="268" y="160" 
+                              font-family="'Arial Black', 'Impact', sans-serif" 
+                              font-size="72" font-weight="900" 
+                              fill="#000000"
+                              style="letter-spacing:-4px;">A</text>
+
+                        <!-- Хвостик буквы A (нижний плавник) -->
+                        <path d="M 300 158 Q 320 175 315 190 Q 305 178 295 168 Z" 
+                              fill="#000000"/>
+
+                        <!-- ГЛАЗ (между F и i) -->
+                        <g class="shark-eye">
+                            <circle cx="112" cy="128" r="5" fill="#ffffff"/>
+                            <circle cx="113" cy="128" r="2.5" fill="#000000"/>
+                        </g>
+
+                        <!-- Жабры (3 линии справа) -->
+                        <path d="M 322 118 Q 326 130 322 142" stroke="#000000" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M 332 120 Q 336 130 332 140" stroke="#000000" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M 342 122 Q 345 130 342 138" stroke="#000000" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+                        <!-- ПУЗЫРЬКИ -->
+                        <circle cx="90" cy="88" r="4" fill="#000000" class="bubble" opacity="0.85"/>
+                        <circle cx="78" cy="72" r="3" fill="#000000" class="bubble" opacity="0.7"/>
+                        <circle cx="102" cy="60" r="2.5" fill="#000000" class="bubble" opacity="0.6"/>
                     </g>
-
-                    <!-- Основное тело-контур вокруг букв -->
-                    <path d="M 78 68 
-                             Q 90 40 130 38 
-                             Q 190 32 240 42 
-                             Q 275 50 295 62 
-                             Q 275 72 240 72 
-                             Q 190 78 130 74 
-                             Q 95 72 78 68 Z" 
-                          fill="none" stroke="url(#sharkBodyGrad)" stroke-width="3" opacity="0.5"/>
-
-                    <!-- Спинной плавник (сверху, над буквами) -->
-                    <path d="M 140 38 Q 155 8 175 30 L 158 36 Z" 
-                          fill="url(#sharkBodyGrad)"/>
-
-                    <!-- Нижний плавник (маленький, снизу) -->
-                    <path d="M 180 74 Q 195 88 205 76 L 192 73 Z" 
-                          fill="url(#sharkBodyGrad)" opacity="0.85"/>
-
-                    <!-- Глаз акулы (большая точка над i) -->
-                    <circle cx="92" cy="42" r="6" fill="url(#sharkBodyGrad)" class="shark-eye-dot"/>
-                    <circle cx="92" cy="42" r="2.5" fill="#121214"/>
                 </g>
-
-                <!-- ===== БУКВЫ FiSHKA (рукописные, как на фото) ===== -->
-                <!-- Используем шрифт Pacifico — максимально похож на леттеринг с картинки -->
-                <text x="78" y="80" 
-                      font-family="'Pacifico', cursive" 
-                      font-size="52" 
-                      fill="url(#letterGrad)" 
-                      filter="url(#softGlow)"
-                      transform="rotate(-3, 78, 80)">F</text>
-                
-                <text x="112" y="80" 
-                      font-family="'Pacifico', cursive" 
-                      font-size="52" 
-                      fill="url(#letterGrad)" 
-                      filter="url(#softGlow)"
-                      transform="rotate(2, 112, 80)">i</text>
-                
-                <text x="138" y="82" 
-                      font-family="'Pacifico', cursive" 
-                      font-size="56" 
-                      fill="url(#letterGrad)" 
-                      filter="url(#softGlow)"
-                      transform="rotate(-1, 138, 82)">S</text>
-                
-                <text x="184" y="80" 
-                      font-family="'Pacifico', cursive" 
-                      font-size="52" 
-                      fill="url(#letterGrad)" 
-                      filter="url(#softGlow)"
-                      transform="rotate(1, 184, 80)">h</text>
-                
-                <text x="214" y="80" 
-                      font-family="'Pacifico', cursive" 
-                      font-size="50" 
-                      fill="url(#letterGrad)" 
-                      filter="url(#softGlow)"
-                      transform="rotate(-2, 214, 80)">k</text>
-                
-                <!-- Буква A с хвостиком, как на фото -->
-                <text x="242" y="80" 
-                      font-family="'Pacifico', cursive" 
-                      font-size="54" 
-                      fill="url(#letterGrad)" 
-                      filter="url(#softGlow)"
-                      transform="rotate(4, 242, 80)">A</text>
-
-                <!-- Пузырьки воды -->
-                <circle cx="30" cy="35" r="3" fill="#5ec269" class="bubble" opacity="0.6"/>
-                <circle cx="20" cy="55" r="2" fill="#5ec269" class="bubble" opacity="0.5"/>
-                <circle cx="300" cy="48" r="2.5" fill="#5ec269" class="bubble" opacity="0.6"/>
-
-                <!-- Линия воды под акулой -->
-                <path d="M 10 100 Q 80 94 160 98 Q 240 102 310 96" 
-                      stroke="#5ec269" stroke-width="2.5" fill="none" opacity="0.55" stroke-linecap="round"/>
             </svg>
         </div>
         <!-- ====== КОНЕЦ ЛОГОТИПА ====== -->
@@ -475,7 +482,7 @@
     </nav>
 
     <main class="menu-container" id="menuContainer">
-        <!-- Меню будет сгенерировано динамически -->
+        <!-- Меню будет сгенерировано динамически с разделителями -->
     </main>
 
     <div class="cart-bar" id="cartBar" style="display: none;" onclick="sendOrderToWhatsApp()">
@@ -504,7 +511,6 @@
                     <button class="btn-action" onclick="showAdminTab('qr')">QR-коды (40 столов)</button>
                 </div>
 
-                <!-- Вкладка Редактора -->
                 <div id="tabEditor">
                     <h3>Добавить / Изменить блюдо</h3>
                     <input type="hidden" id="editIndex">
@@ -512,7 +518,6 @@
                     <input type="number" id="editPrice" class="input-field" placeholder="Цена (руб)">
                     <input type="text" id="editTime" class="input-field" placeholder="Время готовки (~15 мин)">
                     <select id="editCategory" class="input-field">
-                        <!-- Динамически заполняется -->
                     </select>
                     <p style="font-size: 12px; color: var(--text-sub);">Загрузить фото из памяти устройства:</p>
                     <input type="file" id="editImageFile" accept="image/*" class="input-field">
@@ -525,7 +530,6 @@
                     <div id="adminFoodList" style="margin-top: 10px;"></div>
                 </div>
 
-                <!-- Вкладка QR-кодов -->
                 <div id="tabQR" style="display: none;">
                     <h3>QR-коды для 40 столиков</h3>
                     <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 10px;">Распечатайте и наклейте на соответствующие столики:</p>
@@ -539,17 +543,21 @@
     </div>
 
     <script>
-        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
         const PHONE_NUMBER = "79681755402";
         
         const initialMenu = [
             { name: "Горячий шик", price: 300, time: "~15-20 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500" },
             { name: "Филадельфия", price: 300, time: "~15 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500" },
+            { name: "Калифорния", price: 280, time: "~15 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1553621042-f6e147245754?w=500" },
             { name: "Гамбургер куриный", price: 130, time: "~10 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" },
             { name: "Хот-дог", price: 120, time: "~7 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500" },
+            { name: "Картофель фри", price: 90, time: "~8 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500" },
+            { name: "Пицца Пепперони", price: 450, time: "~20 мин", cat: "Пицца", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=500" },
+            { name: "Пицца Маргарита", price: 400, time: "~18 мин", cat: "Пицца", img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500" },
             { name: "Шаурма", price: 200, time: "~10 мин", cat: "Восточная кухня", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=500" },
             { name: "Цезарь с курицей", price: 300, time: "~12 мин", cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" },
-            { name: "Американо", price: 150, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
+            { name: "Американо", price: 150, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" },
+            { name: "Капучино", price: 180, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500" }
         ];
 
         let menuData = JSON.parse(localStorage.getItem('fishka_menu')) || initialMenu;
@@ -557,27 +565,35 @@
         let activeCategory = "Все";
         let currentTable = 1;
 
-        // ПОЛУЧЕНИЕ НОМЕРА СТОЛА ИЗ URL (?table=N)
         function initTableNumber() {
             const urlParams = new URLSearchParams(window.location.search);
             const tableParam = urlParams.get('table');
-            if (tableParam) {
-                currentTable = tableParam;
-            }
+            if (tableParam) currentTable = tableParam;
             document.getElementById('tableBadge').innerText = `Столик №${currentTable}`;
         }
 
-        // РЕНДЕР КАТЕГОРИЙ И МЕНЮ
+        // Возвращает список категорий в порядке появления в меню (без "Все")
+        function getOrderedCategories() {
+            const seen = new Set();
+            const ordered = [];
+            menuData.forEach(item => {
+                if (!seen.has(item.cat)) {
+                    seen.add(item.cat);
+                    ordered.push(item.cat);
+                }
+            });
+            return ordered;
+        }
+
         function renderCategories() {
-            const categories = ["Все", ...new Set(menuData.map(item => item.cat))];
+            const categories = ["Все", ...getOrderedCategories()];
             const nav = document.getElementById('categoriesNav');
             nav.innerHTML = categories.map(cat => `
                 <button class="cat-btn ${cat === activeCategory ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>
             `).join('');
 
-            // Заполнение категорий в админке
             const editCatSelect = document.getElementById('editCategory');
-            editCatSelect.innerHTML = categories.filter(c => c !== "Все").map(c => `<option value="${c}">${c}</option>`).join('');
+            editCatSelect.innerHTML = getOrderedCategories().map(c => `<option value="${c}">${c}</option>`).join('');
             editCatSelect.innerHTML += `<option value="Новая">+ Добавить новую категорию</option>`;
         }
 
@@ -587,42 +603,64 @@
             renderMenu();
         }
 
+        // Рендер меню с заголовками-разделителями категорий
         function renderMenu() {
             const container = document.getElementById('menuContainer');
-            const filtered = activeCategory === "Все" ? menuData : menuData.filter(i => i.cat === activeCategory);
+            let html = '';
 
-            container.innerHTML = filtered.map((item, idx) => {
-                const globalIndex = menuData.indexOf(item);
-                const qty = cart[globalIndex] || 0;
+            if (activeCategory === "Все") {
+                // Показываем все категории по порядку с заголовками
+                const cats = getOrderedCategories();
+                cats.forEach(cat => {
+                    const items = menuData.filter(i => i.cat === cat);
+                    if (items.length === 0) return;
 
-                return `
-                <div class="food-card">
-                    <img src="${item.img}" class="food-img" alt="${item.name}">
-                    <div class="food-info">
-                        <div class="food-name">${item.name}</div>
-                        <div class="food-meta">
-                            <span>⏱ ${item.time || '~15 мин'}</span>
-                            <span>Категория: ${item.cat}</span>
-                        </div>
-                        <div class="food-bottom">
-                            <div class="food-price">${item.price} ₽</div>
-                            ${qty > 0 ? `
-                                <div class="counter-controls">
-                                    <button class="btn-qty" onclick="updateQty(${globalIndex}, -1)">-</button>
-                                    <span class="qty-val">${qty}</span>
-                                    <button class="btn-qty" onclick="updateQty(${globalIndex}, 1)">+</button>
-                                </div>
-                            ` : `
-                                <button class="btn-add" onclick="updateQty(${globalIndex}, 1)">Добавить</button>
-                            `}
-                        </div>
-                    </div>
-                </div>
-                `;
-            }).join('');
+                    html += `<div class="category-header"><span class="category-title">${cat}</span></div>`;
+                    items.forEach(item => {
+                        html += renderFoodCard(item, menuData.indexOf(item));
+                    });
+                });
+            } else {
+                // Показываем только выбранную категорию (с заголовком)
+                const items = menuData.filter(i => i.cat === activeCategory);
+                if (items.length > 0) {
+                    html += `<div class="category-header"><span class="category-title">${activeCategory}</span></div>`;
+                    items.forEach(item => {
+                        html += renderFoodCard(item, menuData.indexOf(item));
+                    });
+                }
+            }
+
+            container.innerHTML = html;
         }
 
-        // КОРЗИНА И ОБНОВЛЕНИЕ ПОРЦИЙ
+        function renderFoodCard(item, globalIndex) {
+            const qty = cart[globalIndex] || 0;
+            return `
+            <div class="food-card">
+                <img src="${item.img}" class="food-img" alt="${item.name}">
+                <div class="food-info">
+                    <div class="food-name">${item.name}</div>
+                    <div class="food-meta">
+                        <span>⏱ ${item.time || '~15 мин'}</span>
+                        <span>${item.cat}</span>
+                    </div>
+                    <div class="food-bottom">
+                        <div class="food-price">${item.price} ₽</div>
+                        ${qty > 0 ? `
+                            <div class="counter-controls">
+                                <button class="btn-qty" onclick="updateQty(${globalIndex}, -1)">-</button>
+                                <span class="qty-val">${qty}</span>
+                                <button class="btn-qty" onclick="updateQty(${globalIndex}, 1)">+</button>
+                            </div>
+                        ` : `
+                            <button class="btn-add" onclick="updateQty(${globalIndex}, 1)">Добавить</button>
+                        `}
+                    </div>
+                </div>
+            </div>`;
+        }
+
         function updateQty(index, delta) {
             cart[index] = (cart[index] || 0) + delta;
             if (cart[index] <= 0) delete cart[index];
@@ -649,7 +687,6 @@
             }
         }
 
-        // ОТПРАВКА В WHATSAPP
         function sendOrderToWhatsApp() {
             let orderText = `📍 *ЗАКАЗ — СТОЛИК №${currentTable}*\n\n`;
             let totalPrice = 0;
@@ -662,12 +699,10 @@
             }
 
             orderText += `\n💰 *Итого к оплате:* ${totalPrice} ₽`;
-
             const encodedText = encodeURIComponent(orderText);
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
         }
 
-        // АДМИНКА И ПАРОЛЬ
         function openAdminModal() {
             document.getElementById('adminModal').style.display = 'block';
         }
@@ -693,7 +728,6 @@
             document.getElementById('tabQR').style.display = tab === 'qr' ? 'block' : 'none';
         }
 
-        // РЕДАКТИРОВАНИЕ И СОХРАНЕНИЕ
         function saveFoodItem() {
             const name = document.getElementById('editName').value;
             const price = parseFloat(document.getElementById('editPrice').value);
@@ -747,7 +781,7 @@
             const container = document.getElementById('adminFoodList');
             container.innerHTML = menuData.map((item, idx) => `
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#2c2c2e; padding:8px; margin-bottom:6px; border-radius:8px;">
-                    <div><strong>${item.name}</strong> (${item.price} ₽)</div>
+                    <div><strong>${item.name}</strong> (${item.price} ₽) — <span style="color:var(--text-sub); font-size:12px;">${item.cat}</span></div>
                     <div>
                         <button style="padding:4px 8px;" onclick="editFoodItem(${idx})">✏️</button>
                         <button style="padding:4px 8px; background:var(--danger-color); color:#fff; border:none; border-radius:4px;" onclick="deleteFoodItem(${idx})">🗑</button>
@@ -783,7 +817,6 @@
             document.getElementById('editImageFile').value = "";
         }
 
-        // ГЕНЕРАЦИЯ 40 QR-КОДОВ
         function generateQRCodes() {
             const grid = document.getElementById('qrGrid');
             grid.innerHTML = "";
