@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FiSHKA — Шаурма Пицца Кура</title>
+    <title>FiSHKA — Меню и Заказ</title>
     <!-- Подключение QR-библиотеки -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --bg-color: #0e0e11;
-            --card-bg: rgba(26, 26, 32, 0.92);
-            --accent-green: #25D366;
-            --accent-green-bright: #22c55e;
-            --text-main: #ffffff;
-            --text-sub: #9ca3af;
+            --bg-color: #0f0f12;
+            --card-bg: #18181c;
+            --accent-green: #22c55e;
+            --accent-green-glow: rgba(34, 197, 94, 0.35);
+            --text-main: #f2f2f7;
+            --text-sub: #a1a1a6;
             --border-color: #27272a;
             --danger-color: #ef4444;
         }
@@ -35,119 +35,105 @@
             overflow-x: hidden;
         }
 
-        /* ----------------------------------------------------
-           ФОНОВЫЕ ДЕКОРАЦИИ (ВОДЯНОЙ ЗНАК FISHKA + ТАРЕЛКИ)
-        ---------------------------------------------------- */
-        .bg-watermark-container {
+        /* ---------------------------------------------
+           ФОНОВЫЕ ДЕКОРАЦИИ И ВОДЯНОЙ ЗНАК
+        --------------------------------------------- */
+        /* Гигантский просвечивающий логотип FISHKA на фоне */
+        .bg-watermark {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            width: 140vw;
+            max-width: 900px;
+            opacity: 0.035;
             pointer-events: none;
             z-index: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
+        }
+
+        /* Декоративные полупрозрачные тарелки и приборы по углам */
+        .bg-decor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
             opacity: 0.04;
-        }
-
-        .bg-watermark-text {
-            font-size: 22vw;
-            font-weight: 900;
-            letter-spacing: 12px;
             color: #ffffff;
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            text-transform: uppercase;
-            transform: rotate(-12deg);
-            white-space: nowrap;
-            user-select: none;
         }
-
-        /* Силуэты тарелок в фоне */
-        .bg-plate {
-            position: fixed;
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            border: 8px dashed rgba(255, 255, 255, 0.08);
-            pointer-events: none;
-            z-index: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .bg-plate::after {
-            content: '';
+        .decor-plate-left {
+            top: 20%;
+            left: -40px;
             width: 180px;
             height: 180px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.05);
+            transform: rotate(15deg);
         }
-        .plate-1 { top: 15%; left: -80px; transform: rotate(15deg); }
-        .plate-2 { top: 55%; right: -90px; transform: rotate(-20deg); }
+        .decor-plate-right {
+            bottom: 15%;
+            right: -40px;
+            width: 200px;
+            height: 200px;
+            transform: rotate(-20deg);
+        }
+        .decor-cutlery {
+            top: 60%;
+            left: 10px;
+            width: 90px;
+            height: 90px;
+            transform: rotate(45deg);
+        }
 
-        /* ----------------------------------------------------
-           HEADER В СТИЛЕ WHATSAPP-БАННЕРА FISHKA
-        ---------------------------------------------------- */
-        header {
+        /* ---------------------------------------------
+           ШАПКА И ПАТТЕРН ПЯТЕН (В СТИЛЕ WHATSAPP)
+        --------------------------------------------- */
+        .header-banner {
             position: relative;
-            z-index: 10;
-            background: #ffffff;
+            background: #000000;
+            background-image: radial-gradient(circle at 10% 20%, #1f2937 0%, #000 90%);
+            padding: 24px 16px 16px;
             text-align: center;
-            border-bottom: 3px solid var(--accent-green);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid var(--accent-green);
+            z-index: 10;
+            overflow: hidden;
         }
 
-        /* Черно-белый паттерн с пятнами */
-        .header-pattern {
-            width: 100%;
-            height: 80px;
-            background-color: #ffffff;
-            background-image: radial-gradient(#000000 20%, transparent 20%), radial-gradient(#000000 20%, transparent 20%);
-            background-position: 0 0, 15px 15px;
-            background-size: 30px 30px;
+        /* Абстрактные фоновые пятна в шапке */
+        .header-banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(ellipse at 15% 30%, rgba(255,255,255,0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 20%, rgba(34,197,94,0.15) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Аватар-кружок с логотипом-рыбой */
+        .logo-circle-container {
             position: relative;
-            opacity: 0.9;
-        }
-
-        .logo-wrapper {
-            margin-top: -45px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 14px;
-            background: linear-gradient(180deg, transparent 0%, #121216 60%);
-        }
-
-        /* Зеленый круг с рыбой */
-        .logo-circle {
-            width: 96px;
-            height: 96px;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 10px;
             border-radius: 50%;
             background: #ffffff;
             border: 4px solid var(--accent-green);
+            box-shadow: 0 0 20px var(--accent-green-glow);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
             padding: 8px;
         }
 
-        .header-title-text {
-            color: #ffffff;
-            font-size: 22px;
-            font-weight: 800;
-            margin-top: 8px;
-            letter-spacing: 0.5px;
+        .logo-svg {
+            width: 100%;
+            height: auto;
         }
 
-        .header-subtitle {
-            color: var(--text-sub);
+        .shop-subtext {
             font-size: 13px;
+            color: var(--text-sub);
+            letter-spacing: 1px;
             margin-top: 2px;
+            font-weight: 500;
         }
 
         .table-badge {
@@ -155,26 +141,25 @@
             background: var(--accent-green);
             color: #000;
             font-weight: 800;
-            font-size: 12px;
+            font-size: 13px;
             padding: 4px 14px;
             border-radius: 20px;
             margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            box-shadow: 0 2px 10px var(--accent-green-glow);
         }
 
-        /* ----------------------------------------------------
-           КАТЕГОРИИ И МЕНЮ
-        ---------------------------------------------------- */
+        /* ---------------------------------------------
+           КАТЕГОРИИ
+        --------------------------------------------- */
         .categories-scroll {
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 20;
             display: flex;
             gap: 8px;
             overflow-x: auto;
             padding: 12px 16px;
-            background-color: rgba(14, 14, 17, 0.95);
+            background-color: rgba(15, 15, 18, 0.95);
             backdrop-filter: blur(10px);
             scrollbar-width: none;
             border-bottom: 1px solid var(--border-color);
@@ -191,20 +176,23 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
         .cat-btn.active {
             background-color: var(--accent-green);
-            color: #000000;
+            color: #000;
             border-color: var(--accent-green);
-            font-weight: 800;
-            box-shadow: 0 0 12px rgba(37, 211, 102, 0.3);
+            font-weight: 700;
+            box-shadow: 0 2px 10px var(--accent-green-glow);
         }
 
+        /* ---------------------------------------------
+           СПИСОК БЛЮД И КАРТОЧКИ
+        --------------------------------------------- */
         .menu-container {
             position: relative;
-            z-index: 10;
+            z-index: 1;
             padding: 16px;
             max-width: 600px;
             margin: 0 auto;
@@ -218,18 +206,15 @@
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(5px);
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .food-card:hover {
-            border-color: rgba(37, 211, 102, 0.4);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            transition: transform 0.15s ease;
         }
 
         .food-img {
             width: 100%;
             height: 190px;
             object-fit: cover;
-            background-color: #1a1a20;
+            background-color: #27272a;
         }
 
         .food-info {
@@ -242,6 +227,7 @@
         .food-name {
             font-size: 18px;
             font-weight: 700;
+            color: #fff;
         }
 
         .food-meta {
@@ -261,24 +247,24 @@
 
         .food-price {
             font-size: 20px;
-            font-weight: 900;
+            font-weight: 800;
             color: var(--accent-green);
         }
 
-        /* КНОПКИ УПРАВЛЕНИЯ КОРЗИНОЙ */
+        /* УПРАВЛЕНИЕ КОЛИЧЕСТВОМ */
         .counter-controls {
             display: flex;
             align-items: center;
             background: #27272a;
             border-radius: 10px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
         }
 
         .btn-qty {
             background: none;
             border: none;
-            color: var(--text-main);
+            color: #fff;
             width: 36px;
             height: 36px;
             font-size: 18px;
@@ -287,8 +273,8 @@
         }
 
         .qty-val {
-            padding: 0 10px;
-            font-weight: 800;
+            padding: 0 8px;
+            font-weight: 700;
             font-size: 15px;
             color: var(--accent-green);
         }
@@ -301,13 +287,12 @@
             border-radius: 10px;
             font-weight: 800;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-add:active {
-            background-color: var(--accent-green-bright);
+            box-shadow: 0 2px 8px var(--accent-green-glow);
         }
 
-        /* ПЛАВАЮЩАЯ КОРЗИНА */
+        /* ---------------------------------------------
+           ПЛАВАЮЩАЯ ПАНЕЛЬ КОРЗИНЫ
+        --------------------------------------------- */
         .cart-bar {
             position: fixed;
             bottom: 16px;
@@ -316,31 +301,30 @@
             max-width: 568px;
             margin: 0 auto;
             background-color: var(--accent-green);
-            color: #000000;
-            border-radius: 16px;
+            color: #000;
+            border-radius: 18px;
             padding: 14px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 8px 25px var(--accent-green-glow);
             z-index: 99;
             cursor: pointer;
             font-weight: 800;
         }
 
-        /* ----------------------------------------------------
+        /* ---------------------------------------------
            АДМИНКА И МОДАЛЬНЫЕ ОКНА
-        ---------------------------------------------------- */
+        --------------------------------------------- */
         .admin-trigger {
             position: fixed;
             top: 12px;
             right: 12px;
             background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid var(--border-color);
             border-radius: 50%;
             width: 36px;
             height: 36px;
-            opacity: 0.5;
             font-size: 16px;
             color: #fff;
             z-index: 101;
@@ -393,8 +377,8 @@
 
         .qr-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 16px;
             margin-top: 16px;
         }
 
@@ -410,57 +394,65 @@
 </head>
 <body>
 
-    <!-- ФОНОВЫЙ ВОДЯНОЙ ЗНАК FISHKA С РЫБОЙ -->
-    <div class="bg-watermark-container">
-        <div class="bg-watermark-text">FiSHKA</div>
-        <!-- Векторный фоновый контур рыбы -->
-        <svg width="400" height="150" viewBox="0 0 200 80" fill="none" stroke="#ffffff" stroke-width="2" style="transform: rotate(10deg);">
-            <path d="M 10 40 C 40 10, 130 10, 160 40 C 130 70, 40 70, 10 40 Z M 160 40 L 195 15 L 195 65 Z" />
-        </svg>
-        <div class="bg-watermark-text">FiSHKA</div>
-    </div>
+    <!-- 1. ФОНОВЫЙ ВОДЯНОЙ ЗНАК (ГИГАНТСКАЯ РЫБА FISHKA) -->
+    <svg class="bg-watermark" viewBox="0 0 500 160" fill="currentColor">
+        <path d="M 30,80 Q 20,20 80,20 C 130,20 120,70 120,70 C 120,70 110,120 170,120 C 230,120 220,50 280,50 C 340,50 330,110 390,110 C 440,110 450,80 450,80 L 490,40 L 475,80 L 490,120 Z" fill="none" stroke="currentColor" stroke-width="12" />
+        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="'Arial Black', sans-serif" font-weight="900" font-size="62" letter-spacing="3">FiSHKA</text>
+    </svg>
 
-    <!-- Декоративные тарелки на заднем плане -->
-    <div class="bg-plate plate-1"></div>
-    <div class="bg-plate plate-2"></div>
+    <!-- 2. ФОНОВЫЕ ДЕКОРАТИВНЫЕ ТАРЕЛКИ И ПРИБОРЫ -->
+    <svg class="bg-decor decor-plate-left" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
+        <circle cx="50" cy="50" r="45"/>
+        <circle cx="50" cy="50" r="32" stroke-dasharray="4 4"/>
+        <circle cx="50" cy="50" r="20"/>
+    </svg>
 
+    <svg class="bg-decor decor-plate-right" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
+        <circle cx="50" cy="50" r="45"/>
+        <circle cx="50" cy="50" r="30"/>
+    </svg>
+
+    <svg class="bg-decor decor-cutlery" viewBox="0 0 100 100" fill="currentColor">
+        <!-- Вилка -->
+        <path d="M 25,10 L 25,40 Q 25,55 35,55 L 35,90 L 40,90 L 40,55 Q 50,55 50,40 L 50,10 L 44,10 L 44,35 L 39,35 L 39,10 L 35,10 L 35,35 L 31,35 L 31,10 Z"/>
+        <!-- Нож -->
+        <path d="M 65,10 Q 80,30 80,55 L 72,55 L 72,90 L 66,90 L 66,10 Z"/>
+    </svg>
+
+    <!-- КНОПКА ВХОДА В АДМИНКУ -->
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
-    <!-- ШАПКА В СТИЛЕ WHATSAPP ПРОФИЛЯ FISHKA -->
-    <header>
-        <div class="header-pattern"></div>
-        <div class="logo-wrapper">
-            <div class="logo-circle">
-                <!-- Точный стилизованный SVG Логотип FiSHKA в форме рыбы -->
-                <svg viewBox="0 0 200 80" width="100%" height="100%">
-                    <g fill="#000000">
-                        <!-- Силуэт рыбы и буквы FiShKa -->
-                        <path d="M 15 42 Q 10 30 20 22 Q 35 15 45 28 L 38 32 Q 30 22 22 30 Q 18 36 22 42 Q 28 50 38 42 L 45 46 Q 32 60 18 50 Z" />
-                        <rect x="44" y="24" width="8" height="32" rx="2"/>
-                        <circle cx="48" cy="18" r="4"/>
-                        <path d="M 60 46 Q 60 38 72 36 Q 82 34 82 28 Q 82 22 72 22 Q 62 22 60 28 L 52 25 Q 56 14 72 14 Q 90 14 90 28 Q 90 38 78 40 Q 68 42 68 48 Q 68 50 78 50 Q 84 50 88 44 L 94 50 Q 86 60 74 60 Q 60 60 60 46 Z"/>
-                        <path d="M 100 14 L 108 14 L 108 32 L 122 32 L 122 14 L 130 14 L 130 58 L 122 58 L 122 40 L 108 40 L 108 58 L 100 58 Z"/>
-                        <path d="M 138 14 L 146 14 L 146 34 L 158 20 L 168 20 L 154 36 L 168 58 L 158 58 L 146 39 L 146 58 L 138 58 Z"/>
-                        <!-- Хвостик рыбы -->
-                        <path d="M 170 38 L 192 16 L 186 38 L 192 60 Z"/>
-                    </g>
-                </svg>
-            </div>
-            <div class="header-title-text">Шаурма Пицца Кура</div>
-            <div class="header-subtitle">~Fishka</div>
-            <div class="table-badge" id="tableBadge">Столик №1</div>
+    <!-- ШАПКА В ФИРМЕННОМ СТИЛЕ WHATSAPP -->
+    <header class="header-banner">
+        <div class="logo-circle-container">
+            <!-- Точный SVG логотип FiSHKA в форме рыбы -->
+            <svg class="logo-svg" viewBox="0 0 320 110" fill="#000000">
+                <g transform="translate(10, 5)">
+                    <!-- Контур рыбы и буквы FiSHKA -->
+                    <path d="M 0,55 C 20,10 60,5 90,25 C 120,40 140,15 180,15 C 220,15 240,40 260,30 C 275,22 280,15 285,10 L 305,55 L 285,100 C 280,95 275,88 260,80 C 240,70 220,95 180,95 C 140,95 120,70 90,85 C 60,105 20,100 0,55 Z" fill="#000000"/>
+                    <text x="145" y="68" font-family="'Arial Black', 'Impact', sans-serif" font-weight="900" font-size="46" fill="#ffffff" text-anchor="middle" letter-spacing="-1">FiSHKa</text>
+                </g>
+            </svg>
         </div>
+        <div class="shop-subtext">Шаурма • Пицца • Кура</div>
+        <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
     <!-- НАВИГАЦИЯ КАТЕГОРИЙ -->
-    <nav class="categories-scroll" id="categoriesNav"></nav>
+    <nav class="categories-scroll" id="categoriesNav">
+        <!-- Категории генерируются через JS -->
+    </nav>
 
-    <!-- ОСНОВНОЕ МЕНЮ -->
-    <main class="menu-container" id="menuContainer"></main>
+    <!-- МЕНЮ -->
+    <main class="menu-container" id="menuContainer">
+        <!-- Блюда генерируются через JS -->
+    </main>
 
-    <!-- ПЛАВАЮЩАЯ КОРЗИНА -->
+    <!-- ПАНЕЛЬ КОРЗИНЫ -->
     <div class="cart-bar" id="cartBar" style="display: none;" onclick="sendOrderToWhatsApp()">
-        <div><span id="cartCount">0</span> позиций</div>
+        <div>
+            <span id="cartCount">0</span> позиций
+        </div>
         <div>Отправить заказ в WhatsApp ➔</div>
         <div id="cartTotal">0 ₽</div>
     </div>
@@ -468,10 +460,10 @@
     <!-- МОДАЛЬНОЕ ОКНО АДМИНКИ -->
     <div class="modal" id="adminModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 12px; color: var(--accent-green);">Панель Управления</h2>
+            <h2 style="margin-bottom: 12px; color: #fff;">Панель Управления</h2>
             
             <div id="authBlock">
-                <p>Введите пароль администратора:</p>
+                <p style="color: var(--text-sub);">Введите пароль администратора:</p>
                 <input type="password" id="adminPassword" class="input-field" placeholder="Пароль">
                 <button class="btn-action" onclick="checkAdminPassword()">Войти</button>
                 <button class="btn-action btn-close" onclick="closeAdminModal()">Закрыть</button>
@@ -485,12 +477,14 @@
 
                 <!-- Вкладка Редактора -->
                 <div id="tabEditor">
-                    <h3>Добавить / Изменить блюдо</h3>
+                    <h3 style="color:#fff;">Добавить / Изменить блюдо</h3>
                     <input type="hidden" id="editIndex">
                     <input type="text" id="editName" class="input-field" placeholder="Название блюда">
                     <input type="number" id="editPrice" class="input-field" placeholder="Цена (руб)">
                     <input type="text" id="editTime" class="input-field" placeholder="Время готовки (~15 мин)">
-                    <select id="editCategory" class="input-field"></select>
+                    <select id="editCategory" class="input-field">
+                        <!-- Выбор категории -->
+                    </select>
                     <p style="font-size: 12px; color: var(--text-sub);">Загрузить фото из памяти устройства:</p>
                     <input type="file" id="editImageFile" accept="image/*" class="input-field">
                     
@@ -498,13 +492,13 @@
                     <button class="btn-action btn-close" onclick="resetEditForm()">Очистить форму</button>
                     <hr style="border-color: var(--border-color); margin: 16px 0;">
                     
-                    <h3>Текущее меню</h3>
+                    <h3 style="color:#fff;">Текущее меню</h3>
                     <div id="adminFoodList" style="margin-top: 10px;"></div>
                 </div>
 
                 <!-- Вкладка QR-кодов -->
                 <div id="tabQR" style="display: none;">
-                    <h3>QR-коды для 40 столиков</h3>
+                    <h3 style="color:#fff;">QR-коды для 40 столиков</h3>
                     <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 10px;">Распечатайте и наклейте на соответствующие столики:</p>
                     <div class="qr-grid" id="qrGrid"></div>
                 </div>
@@ -516,16 +510,17 @@
     </div>
 
     <script>
-        // ИНИЦИАЛИЗАЦИЯ И ДАННЫЕ
-        const PHONE_NUMBER = "79681755402";
+        // КОНФИГУРАЦИЯ И ДАННЫЕ
+        const PHONE_NUMBER = "79286454745"; // Телефон из шапки аккаунта WhatsApp
         
         const initialMenu = [
-            { name: "Шаурма Классическая", price: 200, time: "~10 мин", cat: "Шаурма", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=500" },
-            { name: "Пицца Маргарита", price: 450, time: "~15-20 мин", cat: "Пицца", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" },
-            { name: "Кура Гриль (сочная)", price: 380, time: "~15 мин", cat: "Кура", img: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=500" },
-            { name: "Люля-Кебаб", price: 280, time: "~12 мин", cat: "Восточная кухня", img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500" },
-            { name: "Салат Греческий", price: 250, time: "~7 мин", cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" },
-            { name: "Кофе Американо", price: 120, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
+            { name: "Горячий шик", price: 300, time: "~15-20 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500" },
+            { name: "Филадельфия", price: 300, time: "~15 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500" },
+            { name: "Гамбургер куриный", price: 130, time: "~10 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" },
+            { name: "Хот-дог", price: 120, time: "~7 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500" },
+            { name: "Шаурма", price: 200, time: "~10 мин", cat: "Восточная кухня", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=500" },
+            { name: "Цезарь с курицей", price: 300, time: "~12 мин", cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" },
+            { name: "Американо", price: 150, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
         ];
 
         let menuData = JSON.parse(localStorage.getItem('fishka_menu')) || initialMenu;
@@ -597,7 +592,7 @@
             }).join('');
         }
 
-        // ОБНОВЛЕНИЕ КОРЗИНЫ
+        // КОРЗИНА И ОБНОВЛЕНИЕ
         function updateQty(index, delta) {
             cart[index] = (cart[index] || 0) + delta;
             if (cart[index] <= 0) delete cart[index];
@@ -642,7 +637,7 @@
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
         }
 
-        // АДМИНКА
+        // АДМИНКА И ПАРОЛЬ
         function openAdminModal() {
             document.getElementById('adminModal').style.display = 'block';
         }
@@ -668,6 +663,7 @@
             document.getElementById('tabQR').style.display = tab === 'qr' ? 'block' : 'none';
         }
 
+        // РЕДАКТИРОВАНИЕ И СОХРАНЕНИЕ
         function saveFoodItem() {
             const name = document.getElementById('editName').value;
             const price = parseFloat(document.getElementById('editPrice').value);
@@ -682,7 +678,7 @@
             }
 
             if (!name || !price) {
-                alert("Заполните имя и цену!");
+                alert("Заполните название и цену!");
                 return;
             }
 
@@ -771,8 +767,8 @@
 
                 new QRCode(document.getElementById(`qr_${i}`), {
                     text: `${baseUrl}?table=${i}`,
-                    width: 90,
-                    height: 90
+                    width: 100,
+                    height: 100
                 });
             }
         }
@@ -784,4 +780,3 @@
     </script>
 </body>
 </html>
-
