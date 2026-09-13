@@ -3,780 +3,826 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FiSHKA — Меню и Заказ</title>
-    <!-- Подключение QR-библиотеки -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>Фишка - Панель управления заказами и долгами</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f0f12;
-            --card-bg: #18181c;
-            --accent-green: #22c55e;
-            --accent-green-glow: rgba(34, 197, 94, 0.35);
-            --text-main: #f2f2f7;
-            --text-sub: #a1a1a6;
-            --border-color: #27272a;
-            --danger-color: #ef4444;
+            --bg-dark: #0f1115;
+            --card-bg: #181b22;
+            --accent-gold: #ffb703;
+            --accent-orange: #fb8500;
+            --accent-cyan: #023e8a;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #2a2f3d;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Montserrat', sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            padding-bottom: 95px;
-            position: relative;
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ---------------------------------------------
-           ФОНОВЫЕ ДЕКОРАЦИИ И ВОДЯНОЙ ЗНАК
-        --------------------------------------------- */
-        /* Гигантский просвечивающий логотип FISHKA на фоне */
-        .bg-watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-12deg);
-            width: 140vw;
-            max-width: 900px;
-            opacity: 0.035;
-            pointer-events: none;
-            z-index: 0;
+        /* HEADER & FISH LOGO */
+        header {
+            background: rgba(24, 27, 34, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* Декоративные полупрозрачные тарелки и приборы по углам */
-        .bg-decor {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.04;
-            color: #ffffff;
-        }
-        .decor-plate-left {
-            top: 20%;
-            left: -40px;
-            width: 180px;
-            height: 180px;
-            transform: rotate(15deg);
-        }
-        .decor-plate-right {
-            bottom: 15%;
-            right: -40px;
-            width: 200px;
-            height: 200px;
-            transform: rotate(-20deg);
-        }
-        .decor-cutlery {
-            top: 60%;
-            left: 10px;
-            width: 90px;
-            height: 90px;
-            transform: rotate(45deg);
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        /* ---------------------------------------------
-           ШАПКА И ПАТТЕРН ПЯТЕН (В СТИЛЕ WHATSAPP)
-        --------------------------------------------- */
-        .header-banner {
+        /* Unique Fish Shape Logo incorporating "ФИШКА" */
+        .fish-logo-wrapper {
             position: relative;
-            background: #000000;
-            background-image: radial-gradient(circle at 10% 20%, #1f2937 0%, #000 90%);
-            padding: 24px 16px 16px;
-            text-align: center;
-            border-bottom: 2px solid var(--accent-green);
-            z-index: 10;
-            overflow: hidden;
-        }
-
-        /* Абстрактные фоновые пятна в шапке */
-        .header-banner::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: 
-                radial-gradient(ellipse at 15% 30%, rgba(255,255,255,0.12) 0%, transparent 40%),
-                radial-gradient(ellipse at 85% 20%, rgba(34,197,94,0.15) 0%, transparent 45%),
-                radial-gradient(circle at 50% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        /* Аватар-кружок с логотипом-рыбой */
-        .logo-circle-container {
-            position: relative;
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 10px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 4px solid var(--accent-green);
-            box-shadow: 0 0 20px var(--accent-green-glow);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            background: linear-gradient(135deg, #fb8500, #ffb703);
+            padding: 10px 32px 10px 24px;
+            clip-path: polygon(
+                0% 50%, 
+                15% 15%, 
+                75% 15%, 
+                88% 0%, 
+                85% 35%, 
+                100% 50%, 
+                85% 65%, 
+                88% 100%, 
+                75% 85%, 
+                15% 85%
+            );
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(251, 133, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .logo-svg {
-            width: 100%;
-            height: auto;
+        .fish-logo-wrapper:hover {
+            transform: scale(1.05) rotate(-1deg);
+            box-shadow: 0 6px 20px rgba(251, 133, 0, 0.6);
         }
 
-        .shop-subtext {
-            font-size: 13px;
-            color: var(--text-sub);
-            letter-spacing: 1px;
-            margin-top: 2px;
-            font-weight: 500;
-        }
-
-        .table-badge {
-            display: inline-block;
-            background: var(--accent-green);
-            color: #000;
-            font-weight: 800;
-            font-size: 13px;
-            padding: 4px 14px;
-            border-radius: 20px;
-            margin-top: 8px;
-            box-shadow: 0 2px 10px var(--accent-green-glow);
-        }
-
-        /* ---------------------------------------------
-           КАТЕГОРИИ
-        --------------------------------------------- */
-        .categories-scroll {
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 12px 16px;
-            background-color: rgba(15, 15, 18, 0.95);
-            backdrop-filter: blur(10px);
-            scrollbar-width: none;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .categories-scroll::-webkit-scrollbar { display: none; }
-
-        .cat-btn {
-            background-color: var(--card-bg);
-            color: var(--text-sub);
-            border: 1px solid var(--border-color);
-            padding: 8px 18px;
-            border-radius: 20px;
-            white-space: nowrap;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .cat-btn.active {
-            background-color: var(--accent-green);
-            color: #000;
-            border-color: var(--accent-green);
-            font-weight: 700;
-            box-shadow: 0 2px 10px var(--accent-green-glow);
-        }
-
-        /* ---------------------------------------------
-           СПИСОК БЛЮД И КАРТОЧКИ
-        --------------------------------------------- */
-        .menu-container {
-            position: relative;
-            z-index: 1;
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .food-card {
-            background: var(--card-bg);
-            border-radius: 18px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-            transition: transform 0.15s ease;
-        }
-
-        .food-img {
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-            background-color: #27272a;
-        }
-
-        .food-info {
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .food-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .food-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: var(--text-sub);
-        }
-
-        .food-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .food-price {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--accent-green);
-        }
-
-        /* УПРАВЛЕНИЕ КОЛИЧЕСТВОМ */
-        .counter-controls {
-            display: flex;
-            align-items: center;
-            background: #27272a;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-qty {
-            background: none;
-            border: none;
-            color: #fff;
-            width: 36px;
-            height: 36px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .qty-val {
-            padding: 0 8px;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--accent-green);
-        }
-
-        .btn-add {
-            background-color: var(--accent-green);
-            color: #000;
-            border: none;
-            padding: 9px 18px;
-            border-radius: 10px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 2px 8px var(--accent-green-glow);
-        }
-
-        /* ---------------------------------------------
-           ПЛАВАЮЩАЯ ПАНЕЛЬ КОРЗИНЫ
-        --------------------------------------------- */
-        .cart-bar {
-            position: fixed;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            max-width: 568px;
-            margin: 0 auto;
-            background-color: var(--accent-green);
-            color: #000;
-            border-radius: 18px;
-            padding: 14px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 8px 25px var(--accent-green-glow);
-            z-index: 99;
-            cursor: pointer;
-            font-weight: 800;
-        }
-
-        /* ---------------------------------------------
-           АДМИНКА И МОДАЛЬНЫЕ ОКНА
-        --------------------------------------------- */
-        .admin-trigger {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border-color);
+        .fish-eye {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 7px;
+            height: 7px;
+            background-color: #0f1115;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 16px;
-            color: #fff;
-            z-index: 101;
-            cursor: pointer;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.88);
-            z-index: 200;
-            overflow-y: auto;
-            padding: 20px 16px;
+        .fish-logo-text {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #0f1115;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+            margin-left: 6px;
         }
 
-        .modal-content {
-            background: var(--card-bg);
-            border-radius: 18px;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            border: 1px solid var(--border-color);
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
-        .input-field, select {
-            width: 100%;
-            padding: 10px;
-            margin: 6px 0 12px;
-            background: #27272a;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            border-radius: 8px;
-        }
-
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent-green);
-            color: #000;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-gold));
+            color: #0f1115;
+            font-weight: 700;
             border: none;
+            padding: 10px 20px;
             border-radius: 8px;
-            font-weight: bold;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* MAIN CONTENT AREA */
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 20px;
+            flex: 1;
+        }
+
+        /* SUMMARY CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .stat-info h3 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
             margin-bottom: 8px;
         }
 
-        .btn-danger { background: var(--danger-color); color: #fff; }
-        .btn-close { background: #3f3f46; color: #fff; }
-
-        .qr-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+        .stat-info p {
+            font-size: 1.6rem;
+            font-weight: 800;
         }
 
-        .qr-card {
-            background: #fff;
-            color: #000;
-            padding: 10px;
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* "ALL ORDERS" SECTION WITH CUSTOM LIVE CUTLERY & PLATE BACKGROUND */
+        .orders-section {
+            position: relative;
+            background-color: #0b0d11;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* SVG Background Pattern featuring Plates, Forks, and Knives */
+        .orders-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.07; /* Элегантный фоновый рисунок тарелок, вилок и ножей */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><g fill="none" stroke="%23ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><!-- Plate 1 --><circle cx="45" cy="45" r="28"/><circle cx="45" cy="45" r="20" stroke-dasharray="2 2"/><!-- Plate 2 --><circle cx="135" cy="135" r="32"/><circle cx="135" cy="135" r="22"/><!-- Fork 1 --><path d="M 120,25 L 120,40 C 120,45 130,45 130,40 L 130,25 M 125,25 L 125,65 M 120,32 L 130,32"/><!-- Knife 1 --><path d="M 145,25 C 145,25 152,32 145,48 L 145,65 M 145,25 L 145,65"/><!-- Fork 2 (angled) --><g transform="translate(35, 125) rotate(-30)"><path d="M -5,-15 L -5,0 C -5,5 5,5 5,0 L 5,-15 M 0,-15 L 0,25"/></g><!-- Knife 2 (angled) --><g transform="translate(55, 125) rotate(30)"><path d="M 0,-15 C 0,-15 7,-8 0,8 L 0,25"/></g></g></svg>');
+            background-repeat: repeat;
+            background-size: 180px 180px;
+            z-index: 1;
+        }
+
+        .section-header {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .section-title i {
+            color: var(--accent-orange);
+        }
+
+        .filter-bar {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 15px 10px 40px;
             border-radius: 8px;
-            text-align: center;
+            color: #fff;
+            font-size: 0.9rem;
         }
-        .qr-card div { margin: 0 auto; }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* TABLE CONTAINER */
+        .table-wrapper {
+            position: relative;
+            z-index: 2;
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: rgba(24, 27, 34, 0.85);
+            backdrop-filter: blur(5px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+
+        th {
+            background: rgba(30, 35, 45, 0.9);
+            padding: 14px 18px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+
+        .badge-paid {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-overdue {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-action {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+
+        .btn-action:hover {
+            color: var(--text-main);
+        }
+
+        .btn-whatsapp {
+            color: #25D366;
+            background: rgba(37, 211, 102, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-whatsapp:hover {
+            background: #25D366;
+            color: #fff;
+        }
+
+        /* MODAL WINDOW */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: #0f1115;
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent-orange);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 15px;
+            }
+            .fish-logo-text {
+                font-size: 1.2rem;
+            }
+            .orders-section {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. ФОНОВЫЙ ВОДЯНОЙ ЗНАК (ГИГАНТСКАЯ РЫБА FISHKA) -->
-    <svg class="bg-watermark" viewBox="0 0 500 160" fill="currentColor">
-        <path d="M 30,80 Q 20,20 80,20 C 130,20 120,70 120,70 C 120,70 110,120 170,120 C 230,120 220,50 280,50 C 340,50 330,110 390,110 C 440,110 450,80 450,80 L 490,40 L 475,80 L 490,120 Z" fill="none" stroke="currentColor" stroke-width="12" />
-        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="'Arial Black', sans-serif" font-weight="900" font-size="62" letter-spacing="3">FiSHKA</text>
-    </svg>
-
-    <!-- 2. ФОНОВЫЕ ДЕКОРАТИВНЫЕ ТАРЕЛКИ И ПРИБОРЫ -->
-    <svg class="bg-decor decor-plate-left" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
-        <circle cx="50" cy="50" r="45"/>
-        <circle cx="50" cy="50" r="32" stroke-dasharray="4 4"/>
-        <circle cx="50" cy="50" r="20"/>
-    </svg>
-
-    <svg class="bg-decor decor-plate-right" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
-        <circle cx="50" cy="50" r="45"/>
-        <circle cx="50" cy="50" r="30"/>
-    </svg>
-
-    <svg class="bg-decor decor-cutlery" viewBox="0 0 100 100" fill="currentColor">
-        <!-- Вилка -->
-        <path d="M 25,10 L 25,40 Q 25,55 35,55 L 35,90 L 40,90 L 40,55 Q 50,55 50,40 L 50,10 L 44,10 L 44,35 L 39,35 L 39,10 L 35,10 L 35,35 L 31,35 L 31,10 Z"/>
-        <!-- Нож -->
-        <path d="M 65,10 Q 80,30 80,55 L 72,55 L 72,90 L 66,90 L 66,10 Z"/>
-    </svg>
-
-    <!-- КНОПКА ВХОДА В АДМИНКУ -->
-    <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
-
-    <!-- ШАПКА В ФИРМЕННОМ СТИЛЕ WHATSAPP -->
-    <header class="header-banner">
-        <div class="logo-circle-container">
-            <!-- Точный SVG логотип FiSHKA в форме рыбы -->
-            <svg class="logo-svg" viewBox="0 0 320 110" fill="#000000">
-                <g transform="translate(10, 5)">
-                    <!-- Контур рыбы и буквы FiSHKA -->
-                    <path d="M 0,55 C 20,10 60,5 90,25 C 120,40 140,15 180,15 C 220,15 240,40 260,30 C 275,22 280,15 285,10 L 305,55 L 285,100 C 280,95 275,88 260,80 C 240,70 220,95 180,95 C 140,95 120,70 90,85 C 60,105 20,100 0,55 Z" fill="#000000"/>
-                    <text x="145" y="68" font-family="'Arial Black', 'Impact', sans-serif" font-weight="900" font-size="46" fill="#ffffff" text-anchor="middle" letter-spacing="-1">FiSHKa</text>
-                </g>
-            </svg>
+    <!-- HEADER / LOGO -->
+    <header>
+        <div class="logo-container">
+            <div class="fish-logo-wrapper" title="Фишка - Сервис заказов">
+                <div class="fish-eye"></div>
+                <span class="fish-logo-text">ФИШКА</span>
+            </div>
         </div>
-        <div class="shop-subtext">Шаурма • Пицца • Кура</div>
-        <div class="table-badge" id="tableBadge">Столик №1</div>
+        <div class="header-actions">
+            <button class="btn-primary" onclick="openModal()">
+                <i class="fa-solid fa-plus"></i> Новый заказ
+            </button>
+        </div>
     </header>
 
-    <!-- НАВИГАЦИЯ КАТЕГОРИЙ -->
-    <nav class="categories-scroll" id="categoriesNav">
-        <!-- Категории генерируются через JS -->
-    </nav>
+    <!-- MAIN CONTAINER -->
+    <div class="container">
 
-    <!-- МЕНЮ -->
-    <main class="menu-container" id="menuContainer">
-        <!-- Блюда генерируются через JS -->
-    </main>
-
-    <!-- ПАНЕЛЬ КОРЗИНЫ -->
-    <div class="cart-bar" id="cartBar" style="display: none;" onclick="sendOrderToWhatsApp()">
-        <div>
-            <span id="cartCount">0</span> позиций
+        <!-- DASHBOARD STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Общая сумма заказов</h3>
+                    <p id="stat-total">0 ₽</p>
+                </div>
+                <div class="stat-icon" style="color: #3b82f6;">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Оплачено</h3>
+                    <p id="stat-paid" style="color: var(--success);">0 ₽</p>
+                </div>
+                <div class="stat-icon" style="color: var(--success);">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Остаток долгов</h3>
+                    <p id="stat-debt" style="color: var(--danger);">0 ₽</p>
+                </div>
+                <div class="stat-icon" style="color: var(--danger);">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+            </div>
         </div>
-        <div>Отправить заказ в WhatsApp ➔</div>
-        <div id="cartTotal">0 ₽</div>
+
+        <!-- ORDERS SECTION (WITH CUSTOM PLATE & CUTLERY BACKGROUND) -->
+        <div class="orders-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>Все заказы</span>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Поиск по клиенту или блюду/товару..." oninput="renderOrders()">
+                </div>
+                <select class="filter-select" id="statusFilter" onchange="renderOrders()">
+                    <option value="all">Все статусы</option>
+                    <option value="paid">Оплачено</option>
+                    <option value="pending">В ожидании</option>
+                    <option value="overdue">Просрочено</option>
+                </select>
+            </div>
+
+            <!-- ORDERS TABLE -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>№ / Дата</th>
+                            <th>Клиент</th>
+                            <th>Заказ / Детали</th>
+                            <th>Сумма</th>
+                            <th>Остаток</th>
+                            <th>Статус</th>
+                            <th>WhatsApp</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Rendered dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО АДМИНКИ -->
-    <div class="modal" id="adminModal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 12px; color: #fff;">Панель Управления</h2>
-            
-            <div id="authBlock">
-                <p style="color: var(--text-sub);">Введите пароль администратора:</p>
-                <input type="password" id="adminPassword" class="input-field" placeholder="Пароль">
-                <button class="btn-action" onclick="checkAdminPassword()">Войти</button>
-                <button class="btn-action btn-close" onclick="closeAdminModal()">Закрыть</button>
+    <!-- ADD/EDIT ORDER MODAL -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Добавить новый заказ</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
-
-            <div id="adminPanel" style="display: none;">
-                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-                    <button class="btn-action" onclick="showAdminTab('editor')">Редактор Меню</button>
-                    <button class="btn-action" onclick="showAdminTab('qr')">QR-коды (40 столов)</button>
+            <form id="orderForm" onsubmit="saveOrder(event)">
+                <input type="hidden" id="orderId">
+                <div class="form-group">
+                    <label for="clientName">Имя клиента</label>
+                    <input type="text" id="clientName" required placeholder="Например: Магомед">
                 </div>
-
-                <!-- Вкладка Редактора -->
-                <div id="tabEditor">
-                    <h3 style="color:#fff;">Добавить / Изменить блюдо</h3>
-                    <input type="hidden" id="editIndex">
-                    <input type="text" id="editName" class="input-field" placeholder="Название блюда">
-                    <input type="number" id="editPrice" class="input-field" placeholder="Цена (руб)">
-                    <input type="text" id="editTime" class="input-field" placeholder="Время готовки (~15 мин)">
-                    <select id="editCategory" class="input-field">
-                        <!-- Выбор категории -->
+                <div class="form-group">
+                    <label for="clientPhone">Телефон (для WhatsApp)</label>
+                    <input type="tel" id="clientPhone" required placeholder="79991112233">
+                </div>
+                <div class="form-group">
+                    <label for="orderDetails">Состав заказа</label>
+                    <input type="text" id="orderDetails" required placeholder="Например: Сет Ассорти + Напитки">
+                </div>
+                <div class="form-group">
+                    <label for="totalAmount">Сумма заказа (₽)</label>
+                    <input type="number" id="totalAmount" required min="0" placeholder="3500">
+                </div>
+                <div class="form-group">
+                    <label for="paidAmount">Внесено / Оплачено (₽)</label>
+                    <input type="number" id="paidAmount" required min="0" placeholder="1000">
+                </div>
+                <div class="form-group">
+                    <label for="orderStatus">Статус оплаты</label>
+                    <select id="orderStatus">
+                        <option value="paid">Оплачено полностью</option>
+                        <option value="pending">Частичная оплата / В ожидании</option>
+                        <option value="overdue">Долг / Просрочено</option>
                     </select>
-                    <p style="font-size: 12px; color: var(--text-sub);">Загрузить фото из памяти устройства:</p>
-                    <input type="file" id="editImageFile" accept="image/*" class="input-field">
-                    
-                    <button class="btn-action" onclick="saveFoodItem()">Сохранить позицию</button>
-                    <button class="btn-action btn-close" onclick="resetEditForm()">Очистить форму</button>
-                    <hr style="border-color: var(--border-color); margin: 16px 0;">
-                    
-                    <h3 style="color:#fff;">Текущее меню</h3>
-                    <div id="adminFoodList" style="margin-top: 10px;"></div>
                 </div>
-
-                <!-- Вкладка QR-кодов -->
-                <div id="tabQR" style="display: none;">
-                    <h3 style="color:#fff;">QR-коды для 40 столиков</h3>
-                    <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 10px;">Распечатайте и наклейте на соответствующие столики:</p>
-                    <div class="qr-grid" id="qrGrid"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Отмена</button>
+                    <button type="submit" class="btn-primary">Сохранить</button>
                 </div>
-
-                <br>
-                <button class="btn-action btn-close" onclick="closeAdminModal()">Выйти из админки</button>
-            </div>
+            </form>
         </div>
     </div>
 
     <script>
-        // КОНФИГУРАЦИЯ И ДАННЫЕ
-        const PHONE_NUMBER = "79286454745"; // Телефон из шапки аккаунта WhatsApp
-        
-        const initialMenu = [
-            { name: "Горячий шик", price: 300, time: "~15-20 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500" },
-            { name: "Филадельфия", price: 300, time: "~15 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500" },
-            { name: "Гамбургер куриный", price: 130, time: "~10 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" },
-            { name: "Хот-дог", price: 120, time: "~7 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500" },
-            { name: "Шаурма", price: 200, time: "~10 мин", cat: "Восточная кухня", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=500" },
-            { name: "Цезарь с курицей", price: 300, time: "~12 мин", cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" },
-            { name: "Американо", price: 150, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
+        // INITIAL DEMO DATA
+        let orders = JSON.parse(localStorage.getItem('fishka_orders')) || [
+            {
+                id: '101',
+                date: '2026-09-12',
+                client: 'Арсен',
+                phone: '79281234567',
+                details: 'Банкетный сет #2 + Рыбное ассорти',
+                amount: 8500,
+                paid: 8500,
+                status: 'paid'
+            },
+            {
+                id: '102',
+                date: '2026-09-13',
+                client: 'Мурад',
+                phone: '79887654321',
+                details: '3x Сет Фирменный + Доставка',
+                amount: 5200,
+                paid: 2000,
+                status: 'pending'
+            },
+            {
+                id: '103',
+                date: '2026-09-10',
+                client: 'Ислам',
+                phone: '79630001122',
+                details: 'Комбо ужин "Фишка"',
+                amount: 3400,
+                paid: 0,
+                status: 'overdue'
+            }
         ];
 
-        let menuData = JSON.parse(localStorage.getItem('fishka_menu')) || initialMenu;
-        let cart = {};
-        let activeCategory = "Все";
-        let currentTable = 1;
-
-        // ПОЛУЧЕНИЕ НОМЕРА СТОЛА ИЗ URL (?table=N)
-        function initTableNumber() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const tableParam = urlParams.get('table');
-            if (tableParam) {
-                currentTable = tableParam;
-            }
-            document.getElementById('tableBadge').innerText = `Столик №${currentTable}`;
+        function saveToStorage() {
+            localStorage.setItem('fishka_orders', JSON.stringify(orders));
         }
 
-        // РЕНДЕР КАТЕГОРИЙ И МЕНЮ
-        function renderCategories() {
-            const categories = ["Все", ...new Set(menuData.map(item => item.cat))];
-            const nav = document.getElementById('categoriesNav');
-            nav.innerHTML = categories.map(cat => `
-                <button class="cat-btn ${cat === activeCategory ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>
-            `).join('');
+        function calculateStats() {
+            let total = 0;
+            let paid = 0;
+            let debt = 0;
 
-            const editCatSelect = document.getElementById('editCategory');
-            editCatSelect.innerHTML = categories.filter(c => c !== "Все").map(c => `<option value="${c}">${c}</option>`).join('');
-            editCatSelect.innerHTML += `<option value="Новая">+ Добавить новую категорию</option>`;
+            orders.forEach(o => {
+                total += Number(o.amount);
+                paid += Number(o.paid);
+                debt += (Number(o.amount) - Number(o.paid));
+            });
+
+            document.getElementById('stat-total').innerText = total.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('stat-paid').innerText = paid.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('stat-debt').innerText = debt.toLocaleString('ru-RU') + ' ₽';
         }
 
-        function setCategory(cat) {
-            activeCategory = cat;
-            renderCategories();
-            renderMenu();
-        }
+        function renderOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
 
-        function renderMenu() {
-            const container = document.getElementById('menuContainer');
-            const filtered = activeCategory === "Все" ? menuData : menuData.filter(i => i.cat === activeCategory);
+            tbody.innerHTML = '';
 
-            container.innerHTML = filtered.map((item) => {
-                const globalIndex = menuData.indexOf(item);
-                const qty = cart[globalIndex] || 0;
+            const filtered = orders.filter(o => {
+                const matchesSearch = o.client.toLowerCase().includes(search) || o.details.toLowerCase().includes(search);
+                const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
 
-                return `
-                <div class="food-card">
-                    <img src="${item.img}" class="food-img" alt="${item.name}">
-                    <div class="food-info">
-                        <div class="food-name">${item.name}</div>
-                        <div class="food-meta">
-                            <span>⏱ ${item.time || '~15 мин'}</span>
-                            <span>Категория: ${item.cat}</span>
-                        </div>
-                        <div class="food-bottom">
-                            <div class="food-price">${item.price} ₽</div>
-                            ${qty > 0 ? `
-                                <div class="counter-controls">
-                                    <button class="btn-qty" onclick="updateQty(${globalIndex}, -1)">-</button>
-                                    <span class="qty-val">${qty}</span>
-                                    <button class="btn-qty" onclick="updateQty(${globalIndex}, 1)">+</button>
-                                </div>
-                            ` : `
-                                <button class="btn-add" onclick="updateQty(${globalIndex}, 1)">Добавить</button>
-                            `}
-                        </div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        // КОРЗИНА И ОБНОВЛЕНИЕ
-        function updateQty(index, delta) {
-            cart[index] = (cart[index] || 0) + delta;
-            if (cart[index] <= 0) delete cart[index];
-            renderMenu();
-            updateCartBar();
-        }
-
-        function updateCartBar() {
-            const cartBar = document.getElementById('cartBar');
-            let totalCount = 0;
-            let totalPrice = 0;
-
-            for (let idx in cart) {
-                totalCount += cart[idx];
-                totalPrice += cart[idx] * menuData[idx].price;
-            }
-
-            if (totalCount > 0) {
-                cartBar.style.display = 'flex';
-                document.getElementById('cartCount').innerText = totalCount;
-                document.getElementById('cartTotal').innerText = `${totalPrice} ₽`;
-            } else {
-                cartBar.style.display = 'none';
-            }
-        }
-
-        // ОТПРАВКА В WHATSAPP
-        function sendOrderToWhatsApp() {
-            let orderText = `📍 *ЗАКАЗ — СТОЛИК №${currentTable}*\n\n`;
-            let totalPrice = 0;
-
-            for (let idx in cart) {
-                const item = menuData[idx];
-                const itemTotal = item.price * cart[idx];
-                totalPrice += itemTotal;
-                orderText += `• ${item.name} x${cart[idx]} = ${itemTotal} ₽\n`;
-            }
-
-            orderText += `\n💰 *Итого к оплате:* ${totalPrice} ₽`;
-
-            const encodedText = encodeURIComponent(orderText);
-            window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
-        }
-
-        // АДМИНКА И ПАРОЛЬ
-        function openAdminModal() {
-            document.getElementById('adminModal').style.display = 'block';
-        }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').style.display = 'none';
-        }
-
-        function checkAdminPassword() {
-            const pass = document.getElementById('adminPassword').value;
-            if (pass === "54321") {
-                document.getElementById('authBlock').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                renderAdminFoodList();
-                generateQRCodes();
-            } else {
-                alert("Неверный пароль!");
-            }
-        }
-
-        function showAdminTab(tab) {
-            document.getElementById('tabEditor').style.display = tab === 'editor' ? 'block' : 'none';
-            document.getElementById('tabQR').style.display = tab === 'qr' ? 'block' : 'none';
-        }
-
-        // РЕДАКТИРОВАНИЕ И СОХРАНЕНИЕ
-        function saveFoodItem() {
-            const name = document.getElementById('editName').value;
-            const price = parseFloat(document.getElementById('editPrice').value);
-            const time = document.getElementById('editTime').value;
-            let cat = document.getElementById('editCategory').value;
-            const fileInput = document.getElementById('editImageFile');
-            const editIndex = document.getElementById('editIndex').value;
-
-            if (cat === "Новая") {
-                cat = prompt("Введите название новой категории:");
-                if (!cat) return;
-            }
-
-            if (!name || !price) {
-                alert("Заполните название и цену!");
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Заказы не найдены</td></tr>`;
+                calculateStats();
                 return;
             }
 
-            const processSave = (imgUrl) => {
-                const itemObj = {
-                    name, price, time: time || "~15 мин", cat,
-                    img: imgUrl || (editIndex !== "" ? menuData[editIndex].img : "https://via.placeholder.com/300")
-                };
-
-                if (editIndex !== "") {
-                    menuData[editIndex] = itemObj;
-                } else {
-                    menuData.push(itemObj);
+            filtered.forEach(o => {
+                const remaining = Number(o.amount) - Number(o.paid);
+                
+                let badgeClass = 'badge-pending';
+                let statusText = 'В ожидании';
+                if (o.status === 'paid' || remaining <= 0) {
+                    badgeClass = 'badge-paid';
+                    statusText = 'Оплачен';
+                } else if (o.status === 'overdue') {
+                    badgeClass = 'badge-overdue';
+                    statusText = 'Долг';
                 }
 
-                localStorage.setItem('fishka_menu', JSON.stringify(menuData));
-                resetEditForm();
-                renderCategories();
-                renderMenu();
-                renderAdminFoodList();
-                alert("Сохранено!");
-            };
+                // WhatsApp message construction
+                const waMessage = encodeURIComponent(`Здравствуйте, ${o.client}! Касательно вашего заказа "${o.details}": общая сумма ${o.amount} руб., оставшийся остаток к оплате: ${remaining} руб. Спасибо, что выбираете "Фишка"!`);
+                const waLink = `https://wa.me/${o.phone.replace(/[^0-9]/g, '')}?text=${waMessage}`;
 
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    processSave(e.target.result);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${o.id}</strong><br><small style="color:var(--text-muted);">${o.date}</small></td>
+                    <td><strong>${o.client}</strong><br><small style="color:var(--text-muted);">${o.phone}</small></td>
+                    <td>${o.details}</td>
+                    <td><strong>${Number(o.amount).toLocaleString('ru-RU')} ₽</strong></td>
+                    <td style="color: ${remaining > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:700;">
+                        ${remaining.toLocaleString('ru-RU')} ₽
+                    </td>
+                    <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                    <td>
+                        <a href="${waLink}" target="_blank" class="btn-whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i> Напомнить
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn-action" onclick="editOrder('${o.id}')" title="Редактировать"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn-action" onclick="deleteOrder('${o.id}')" title="Удалить"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            calculateStats();
+        }
+
+        function openModal(editId = null) {
+            const modal = document.getElementById('orderModal');
+            const form = document.getElementById('orderForm');
+            
+            if (editId) {
+                const item = orders.find(o => o.id === editId);
+                if (item) {
+                    document.getElementById('modalTitle').innerText = 'Редактировать заказ #' + item.id;
+                    document.getElementById('orderId').value = item.id;
+                    document.getElementById('clientName').value = item.client;
+                    document.getElementById('clientPhone').value = item.phone;
+                    document.getElementById('orderDetails').value = item.details;
+                    document.getElementById('totalAmount').value = item.amount;
+                    document.getElementById('paidAmount').value = item.paid;
+                    document.getElementById('orderStatus').value = item.status;
+                }
             } else {
-                processSave(null);
+                document.getElementById('modalTitle').innerText = 'Добавить новый заказ';
+                form.reset();
+                document.getElementById('orderId').value = '';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+
+        function saveOrder(e) {
+            e.preventDefault();
+            const id = document.getElementById('orderId').value;
+            const client = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const details = document.getElementById('orderDetails').value;
+            const amount = Number(document.getElementById('totalAmount').value);
+            const paid = Number(document.getElementById('paidAmount').value);
+            const status = document.getElementById('orderStatus').value;
+
+            if (id) {
+                // Update
+                const idx = orders.findIndex(o => o.id === id);
+                if (idx !== -1) {
+                    orders[idx] = { ...orders[idx], client, phone, details, amount, paid, status };
+                }
+            } else {
+                // Create
+                const newId = String(Date.now()).slice(-4);
+                const date = new Date().toISOString().split('T')[0];
+                orders.unshift({ id: newId, date, client, phone, details, amount, paid, status });
+            }
+
+            saveToStorage();
+            renderOrders();
+            closeModal();
+        }
+
+        function editOrder(id) {
+            openModal(id);
+        }
+
+        function deleteOrder(id) {
+            if (confirm('Вы уверены, что хотите удалить этот заказ?')) {
+                orders = orders.filter(o => o.id !== id);
+                saveToStorage();
+                renderOrders();
             }
         }
 
-        function renderAdminFoodList() {
-            const container = document.getElementById('adminFoodList');
-            container.innerHTML = menuData.map((item, idx) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#27272a; padding:8px; margin-bottom:6px; border-radius:8px;">
-                    <div><strong>${item.name}</strong> (${item.price} ₽)</div>
-                    <div>
-                        <button style="padding:4px 8px;" onclick="editFoodItem(${idx})">✏️</button>
-                        <button style="padding:4px 8px; background:var(--danger-color); color:#fff; border:none; border-radius:4px;" onclick="deleteFoodItem(${idx})">🗑</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function editFoodItem(idx) {
-            const item = menuData[idx];
-            document.getElementById('editIndex').value = idx;
-            document.getElementById('editName').value = item.name;
-            document.getElementById('editPrice').value = item.price;
-            document.getElementById('editTime').value = item.time;
-            document.getElementById('editCategory').value = item.cat;
-        }
-
-        function deleteFoodItem(idx) {
-            if (confirm("Удалить это блюдо?")) {
-                menuData.splice(idx, 1);
-                localStorage.setItem('fishka_menu', JSON.stringify(menuData));
-                renderCategories();
-                renderMenu();
-                renderAdminFoodList();
-            }
-        }
-
-        function resetEditForm() {
-            document.getElementById('editIndex').value = "";
-            document.getElementById('editName').value = "";
-            document.getElementById('editPrice').value = "";
-            document.getElementById('editTime').value = "";
-            document.getElementById('editImageFile').value = "";
-        }
-
-        // ГЕНЕРАЦИЯ 40 QR-КОДОВ
-        function generateQRCodes() {
-            const grid = document.getElementById('qrGrid');
-            grid.innerHTML = "";
-            const baseUrl = window.location.href.split('?')[0];
-
-            for (let i = 1; i <= 40; i++) {
-                const card = document.createElement('div');
-                card.className = 'qr-card';
-                card.innerHTML = `<div id="qr_${i}"></div><strong style="margin-top:4px; display:block;">Стол №${i}</strong>`;
-                grid.appendChild(card);
-
-                new QRCode(document.getElementById(`qr_${i}`), {
-                    text: `${baseUrl}?table=${i}`,
-                    width: 100,
-                    height: 100
-                });
-            }
-        }
-
-        // СТАРТ
-        initTableNumber();
-        renderCategories();
-        renderMenu();
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderOrders();
+        });
     </script>
 </body>
 </html>
