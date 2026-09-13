@@ -43,19 +43,19 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .logo-container {
+        /* ЛОГОТИП В ФОРМЕ РЫБЫ / АКУЛЫ КАК НА ФОТО */
+        .fish-logo-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 6px;
         }
 
-        .logo-svg {
-            height: 55px;
-            width: auto;
-            max-width: 90%;
-            fill: var(--text-main);
-            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+        .fish-logo-svg {
+            width: 190px;
+            height: auto;
+            max-width: 80vw;
+            filter: drop-shadow(0px 2px 8px rgba(0,0,0,0.5));
         }
 
         .table-badge {
@@ -300,21 +300,24 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <div class="logo-container">
-            <!-- Векторный логотип FiSHKA в форме рыбы/акулы -->
-            <svg class="logo-svg" viewBox="0 0 500 240" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 90 60 C 50 80 20 110 50 145 C 70 165 85 175 105 185 C 80 160 85 140 100 125 C 105 115 110 95 90 60 Z" />
-                <path d="M 85 115 L 120 110 L 115 130 L 95 130 Z" />
-                <path d="M 85 140 L 125 138 L 120 155 L 90 155 Z" />
-                <path d="M 125 75 Q 155 45 185 85 Q 185 160 155 190 Q 125 200 115 180 Q 140 150 140 115 Q 140 85 125 75 Z" />
-                <circle cx="150" cy="62" r="10" />
-                <path d="M 180 80 Q 230 60 250 110 Q 235 150 200 185 Q 180 200 170 180 Q 200 155 205 120 Q 200 90 180 80 Z" />
-                <path d="M 245 80 L 275 80 L 265 175 L 240 175 Z" />
-                <path d="M 260 110 Q 300 100 300 120 Q 285 140 260 145 Z" />
-                <path d="M 290 90 L 320 90 L 310 180 L 285 180 Z" />
-                <path d="M 310 135 L 345 105 L 365 120 L 330 148 L 360 185 L 330 185 Z" />
-                <path d="M 350 75 Q 430 40 455 180 C 440 150 400 140 380 135 L 380 185 L 355 185 Z" />
-                <path d="M 380 90 L 415 120 L 380 120 Z" />
+        <div class="fish-logo-wrapper">
+            <!-- Векторный логотип "FiSHKA" в форме акулы/рыбы по образцу фото -->
+            <svg class="fish-logo-svg" viewBox="0 0 450 160" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#ffffff">
+                    <!-- Буква F (Голова и рот акулы) -->
+                    <path d="M 15 80 Q 25 35 65 25 C 75 25 80 32 75 48 C 65 48 50 55 50 70 L 80 65 C 85 75 75 85 52 85 L 50 100 Q 52 112 68 110 C 75 125 60 135 45 130 Q 20 120 15 80 Z"/>
+                    <!-- Буква i с точкой над головой -->
+                    <path d="M 92 50 L 108 50 L 102 122 L 86 122 Z"/>
+                    <circle cx="100" cy="30" r="10"/>
+                    <!-- Буква S (Центральная дуга тела) -->
+                    <path d="M 160 30 C 120 20 115 65 145 75 C 175 85 160 130 120 120 C 115 105 130 100 138 100 C 150 120 180 95 150 60 C 130 40 160 30 160 30 Z"/>
+                    <!-- Буква h -->
+                    <path d="M 180 20 L 198 20 L 198 62 C 208 48 230 48 232 70 L 232 125 L 214 125 L 214 76 C 212 62 198 65 198 78 L 198 125 L 180 125 Z"/>
+                    <!-- Буква K -->
+                    <path d="M 248 22 L 266 22 L 266 65 L 295 25 L 320 25 L 285 70 L 325 128 L 300 128 L 266 78 L 266 128 L 248 128 Z"/>
+                    <!-- Буква A (Хвост акулы) -->
+                    <path d="M 370 20 C 390 10 420 5 440 20 C 420 50 395 70 380 78 C 400 95 425 115 440 140 C 410 150 380 140 365 110 L 362 138 L 345 138 L 368 20 Z M 378 50 L 370 85 C 382 78 392 65 398 50 Z"/>
+                </g>
             </svg>
         </div>
         <div class="table-badge" id="tableBadge">Столик №1</div>
