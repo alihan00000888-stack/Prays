@@ -34,7 +34,7 @@
         /* HEADER */
         header {
             background: linear-gradient(180deg, #1c1c1e 0%, var(--bg-color) 100%);
-            padding: 16px 16px 10px;
+            padding: 22px 16px 12px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -42,17 +42,17 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* ====== ЛОГОТИП-АКУЛА (как на фото) ====== */
-        .logo-shark {
-            display: inline-block;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 4px 14px rgba(76, 217, 100, 0.25));
-        }
-
-        .shark-svg {
-            width: 240px;
-            height: auto;
-            display: block;
+        /* ==== ЛОГОТИП — ПРОСТО ТЕКСТ FISHKA ==== */
+        .logo-text {
+            font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+            font-size: 34px;
+            font-weight: 200;          /* тонкий шрифт */
+            letter-spacing: 10px;      /* широкая разрядка */
+            text-transform: uppercase;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            padding-left: 10px;        /* компенсация letter-spacing */
+            line-height: 1.1;
         }
 
         .table-badge {
@@ -103,7 +103,6 @@
             margin: 0 auto;
         }
 
-        /* Заголовок группы категорий (в режиме "Всё") */
         .group-header {
             font-size: 22px;
             font-weight: 900;
@@ -318,116 +317,7 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <!-- ====== ЛОГОТИП-АКУЛА (стиль как на фото) ====== -->
-        <div class="logo-shark">
-            <svg class="shark-svg" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" aria-label="FiSHKA — логотип-акула">
-                <defs>
-                    <linearGradient id="fishBody" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#1a1a1a"/>
-                        <stop offset="50%" stop-color="#000000"/>
-                        <stop offset="100%" stop-color="#1a1a1a"/>
-                    </linearGradient>
-                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#5ddb6e"/>
-                        <stop offset="100%" stop-color="#4cd964"/>
-                    </linearGradient>
-                </defs>
-
-                <!-- Зелёный круг вокруг -->
-                <circle cx="200" cy="90" r="82" fill="none" stroke="url(#ringGrad)" stroke-width="8"/>
-
-                <!-- Белая внутренняя область -->
-                <circle cx="200" cy="90" r="76" fill="#ffffff"/>
-
-                <!-- ====== АКУЛА ИЗ ТЕКСТА FiSHKA ====== -->
-                <!-- 
-                     Буква F = хвостовой плавник (слева)
-                     i = тело + глаз
-                     S = тело
-                     H = тело
-                     K = тело
-                     A = нос + верхний плавник (справа)
-                -->
-
-                <!-- Хвост акулы (буква F, стилизованная как хвостовой плавник) -->
-                <path d="M 70 90 
-                         L 55 60 
-                         L 90 78 
-                         L 90 102 
-                         L 55 120 
-                         Z" 
-                      fill="#000000"/>
-
-                <!-- Тело акулы, образованное буквами i-S-H-K -->
-                <!-- Буква i -->
-                <circle cx="115" cy="62" r="7" fill="#000000"/>
-                <path d="M 112 72 Q 110 90 112 108 L 122 108 Q 120 90 122 72 Z" fill="#000000"/>
-
-                <!-- Буква S -->
-                <path d="M 175 62 
-                         Q 150 60 145 75 
-                         Q 142 88 158 92 
-                         Q 175 96 172 108 
-                         Q 168 122 145 118 
-                         Q 138 117 136 110 
-                         L 145 105 
-                         Q 148 112 158 110 
-                         Q 165 108 162 100 
-                         Q 158 94 145 91 
-                         Q 130 87 133 72 
-                         Q 137 56 165 55 
-                         Q 178 55 180 64 
-                         L 172 70 
-                         Q 168 62 158 62 Z" 
-                      fill="#000000"/>
-
-                <!-- Буква H -->
-                <path d="M 185 55 L 195 55 Q 197 80 197 90 Q 205 80 215 80 Q 220 80 222 90 Q 224 100 222 115 L 212 115 Q 214 100 212 95 Q 208 92 202 95 Q 198 100 198 115 L 188 115 Q 186 85 185 55 Z" 
-                      fill="#000000"/>
-
-                <!-- Буква K -->
-                <path d="M 230 55 L 240 55 Q 240 75 238 88 L 255 68 L 268 68 L 248 90 L 268 115 L 255 115 L 240 96 L 240 115 L 230 115 Z" 
-                      fill="#000000"/>
-
-                <!-- Буква A = нос акулы + спинной плавник -->
-                <path d="M 320 60 
-                         L 300 115 
-                         L 310 115 
-                         L 315 100 
-                         L 330 100 
-                         L 335 115 
-                         L 345 115 
-                         L 328 60 
-                         L 320 60 Z
-                         M 318 90 
-                         L 322 78 
-                         L 326 90 Z" 
-                      fill="#000000"/>
-
-                <!-- Верхний спинной плавник (над буквами H-K) -->
-                <path d="M 230 55 
-                         Q 240 30 265 52 
-                         L 250 55 Z" 
-                      fill="#000000"/>
-
-                <!-- Нижний плавник -->
-                <path d="M 200 115 
-                         Q 210 135 230 118 
-                         L 215 115 Z" 
-                      fill="#000000"/>
-
-                <!-- Глаз акулы (у буквы i) -->
-                <circle cx="115" cy="62" r="3" fill="#ffffff"/>
-                <circle cx="116" cy="62" r="1.5" fill="#000000"/>
-
-                <!-- Жабры акулы (у буквы K) -->
-                <path d="M 258 75 Q 262 85 258 95" stroke="#000000" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <path d="M 265 73 Q 269 85 265 97" stroke="#000000" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <path d="M 272 75 Q 275 85 272 95" stroke="#000000" stroke-width="2" fill="none" stroke-linecap="round"/>
-            </svg>
-        </div>
-        <!-- ====== КОНЕЦ ЛОГОТИПА ====== -->
-
+        <div class="logo-text">Fishka</div>
         <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
@@ -493,23 +383,16 @@
         const PHONE_NUMBER = "79681755402";
         
         const initialMenu = [
-            // Роллы
             { name: "Горячий шик", price: 300, time: "~15-20 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500" },
             { name: "Филадельфия", price: 300, time: "~15 мин", cat: "Роллы", img: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500" },
-            // Фаст-Фуд
             { name: "Гамбургер куриный", price: 130, time: "~10 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" },
             { name: "Хот-дог", price: 120, time: "~7 мин", cat: "Фаст-Фуд", img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500" },
-            // Пицца
             { name: "Пицца Маргарита", price: 400, time: "~20 мин", cat: "Пицца", img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500" },
             { name: "Пицца Пепперони", price: 450, time: "~20 мин", cat: "Пицца", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=500" },
-            // Восточная кухня
             { name: "Шаурма", price: 200, time: "~10 мин", cat: "Восточная кухня", img: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=500" },
-            // Салаты
             { name: "Цезарь с курицей", price: 300, time: "~12 мин", cat: "Салаты", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500" },
-            // Домашняя кухня
             { name: "Борщ домашний", price: 250, time: "~15 мин", cat: "Домашняя кухня", img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=500" },
             { name: "Пельмени", price: 280, time: "~12 мин", cat: "Домашняя кухня", img: "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500" },
-            // Напитки
             { name: "Американо", price: 150, time: "~5 мин", cat: "Напитки", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500" }
         ];
 
@@ -525,7 +408,6 @@
             document.getElementById('tableBadge').innerText = `Столик №${currentTable}`;
         }
 
-        // Получить список всех уникальных категорий в порядке появления
         function getCategories() {
             const cats = [];
             menuData.forEach(item => {
@@ -553,7 +435,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Рендер одной карточки блюда
         function renderFoodCard(item, globalIndex) {
             const qty = cart[globalIndex] || 0;
             return `
@@ -585,7 +466,6 @@
         function renderMenu() {
             const container = document.getElementById('menuContainer');
 
-            // Режим "Все" — группируем по категориям с заголовками
             if (activeCategory === "Все") {
                 const cats = getCategories();
                 let html = '';
@@ -611,7 +491,6 @@
 
                 container.innerHTML = html;
             } else {
-                // Режим конкретной категории — только её блюда
                 const itemsInCat = menuData
                     .map((item, idx) => ({ item, idx }))
                     .filter(({ item }) => item.cat === activeCategory);
