@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FiSHKA — Меню и Заказ</title>
-    <!-- Подключение QR-библиотеки для генерирования кодов высокого качества -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
@@ -32,7 +31,6 @@
             padding-bottom: 90px;
         }
 
-        /* HEADER & LOGO — стилизованный под акулу */
         header {
             background: linear-gradient(180deg, #1c1c1e 0%, var(--bg-color) 100%);
             padding: 20px 16px 10px;
@@ -43,68 +41,59 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* === НОВЫЙ ЛОГОТИП-АКУЛА === */
+        /* ===== ЛОГОТИП: ТЕКСТ В ФОРМЕ АКУЛЫ ===== */
         .logo-shark {
             display: inline-block;
             position: relative;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 4px 12px rgba(255, 159, 10, 0.3));
-            transition: transform 0.3s ease;
-        }
-
-        .logo-shark:hover {
-            transform: scale(1.02);
+            margin-bottom: 4px;
+            filter: drop-shadow(0 4px 14px rgba(255, 159, 10, 0.35));
         }
 
         .shark-svg {
-            width: 260px;
+            width: 300px;
             height: auto;
             display: block;
         }
 
-        /* Анимированный плавник-буква F */
-        .shark-fin {
-            animation: finPulse 3s ease-in-out infinite;
+        /* Анимация плавника */
+        .fin-anim {
             transform-origin: center bottom;
+            animation: finPulse 3s ease-in-out infinite;
         }
-
         @keyframes finPulse {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-3px) rotate(-2deg); }
+            50% { transform: translateY(-2px) rotate(-1.5deg); }
         }
 
-        /* Хвост-плавник сзади */
-        .shark-tail {
-            animation: tailWave 2.5s ease-in-out infinite;
-            transform-origin: 200px 60px;
+        /* Анимация хвоста */
+        .tail-anim {
+            transform-origin: 250px 70px;
+            animation: tailWave 2.8s ease-in-out infinite;
         }
-
         @keyframes tailWave {
             0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(5deg); }
+            50% { transform: rotate(4deg); }
         }
 
-        /* Глаз акулы */
-        .shark-eye {
-            animation: blink 4s infinite;
+        /* Мигающий глаз */
+        .eye-blink {
+            animation: blink 4.5s infinite;
         }
-
         @keyframes blink {
-            0%, 90%, 100% { opacity: 1; }
+            0%, 92%, 100% { opacity: 1; }
             95% { opacity: 0; }
         }
 
         /* Пузырьки */
-        .bubble {
+        .bub {
             animation: bubbleFloat 4s ease-in infinite;
         }
-        .bubble:nth-child(2) { animation-delay: 1.5s; }
-        .bubble:nth-child(3) { animation-delay: 2.8s; }
-
+        .bub:nth-child(2) { animation-delay: 1.6s; }
+        .bub:nth-child(3) { animation-delay: 2.9s; }
         @keyframes bubbleFloat {
             0% { opacity: 0; transform: translate(0, 0); }
-            20% { opacity: 0.8; }
-            100% { opacity: 0; transform: translate(-8px, -30px); }
+            25% { opacity: 0.85; }
+            100% { opacity: 0; transform: translate(-6px, -26px); }
         }
 
         .table-badge {
@@ -349,111 +338,107 @@
     <button class="admin-trigger" onclick="openAdminModal()">⚙️</button>
 
     <header>
-        <!-- ====== ЛОГОТИП-АКУЛА ====== -->
+        <!-- ====== ЛОГОТИП: ТЕКСТ "FiSHKA" В ВИДЕ АКУЛЫ ====== -->
         <div class="logo-shark">
-            <svg class="shark-svg" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" aria-label="FiSHKA — логотип в форме акулы">
+            <svg class="shark-svg" viewBox="0 0 340 130" xmlns="http://www.w3.org/2000/svg" aria-label="FiSHKA — логотип в форме акулы">
                 <defs>
-                    <!-- Градиент для тела акулы -->
-                    <linearGradient id="sharkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#ff9f0a"/>
-                        <stop offset="60%" stop-color="#ffb84d"/>
-                        <stop offset="100%" stop-color="#ff9f0a"/>
-                    </linearGradient>
-                    <!-- Градиент для букв -->
-                    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="50%" stop-color="#f2f2f7"/>
+                        <stop offset="55%" stop-color="#f2f2f7"/>
                         <stop offset="100%" stop-color="#ff9f0a"/>
                     </linearGradient>
-                    <!-- Тень -->
-                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur stdDeviation="2" result="blur"/>
+                    <linearGradient id="finGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" stop-color="#ff9f0a"/>
+                        <stop offset="100%" stop-color="#ffc46b"/>
+                    </linearGradient>
+                    <linearGradient id="tailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff9f0a"/>
+                        <stop offset="100%" stop-color="#ff7a00"/>
+                    </linearGradient>
+                    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="2.2" result="b"/>
                         <feMerge>
-                            <feMergeNode in="blur"/>
+                            <feMergeNode in="b"/>
                             <feMergeNode in="SourceGraphic"/>
                         </feMerge>
                     </filter>
                 </defs>
 
-                <!-- Хвостовой плавник (сзади) -->
-                <g class="shark-tail">
-                    <path d="M 270 50 Q 295 25 305 10 Q 290 45 305 75 Q 290 60 270 70 Z" 
-                          fill="url(#sharkGrad)" opacity="0.9"/>
+                <!-- ===== ТЕЛО АКУЛЫ = САМ ТЕКСТ ===== -->
+                <!-- Общий силуэт-обводка тела (тонкая линия, чтобы подчеркнуть форму акулы) -->
+                <path d="M 8 78 
+                         Q 60 58 130 62 
+                         Q 200 66 270 60 
+                         Q 300 58 320 66 
+                         Q 325 78 318 88 
+                         Q 280 96 210 92 
+                         Q 140 88 70 92 
+                         Q 25 94 8 78 Z"
+                      fill="none" stroke="url(#finGrad)" stroke-width="1.6" opacity="0.35"/>
+
+                <!-- ХВОСТОВОЙ ПЛАВНИК (за буквой A, справа) -->
+                <g class="tail-anim">
+                    <!-- Верхняя лопасть хвоста -->
+                    <path d="M 305 62 Q 330 30 340 14 Q 328 48 328 66 Z" fill="url(#tailGrad)"/>
+                    <!-- Нижняя лопасть хвоста -->
+                    <path d="M 305 78 Q 330 100 340 118 Q 328 92 328 74 Z" fill="url(#tailGrad)"/>
                 </g>
 
-                <!-- Тело акулы — силуэт, охватывающий буквы -->
-                <path d="M 10 70 
-                         Q 30 30 80 35 
-                         Q 140 38 180 30 
-                         Q 220 22 260 35 
-                         Q 290 45 300 55 
-                         Q 290 65 260 70 
-                         Q 220 80 180 75 
-                         Q 140 70 80 72 
-                         Q 40 74 10 70 Z" 
-                      fill="none" stroke="url(#sharkGrad)" stroke-width="2.5" opacity="0.35"/>
+                <!-- БУКВА F — превращена в СПИННОЙ ПЛАВНИК (торчит вверх) -->
+                <g class="fin-anim">
+                    <!-- Плавник-треугольник -->
+                    <path d="M 58 62 Q 78 8 96 58 L 74 58 Z" 
+                          fill="url(#finGrad)" filter="url(#softGlow)"/>
+                    <!-- Буква F стилизована внутри плавника (горизонтальные штрихи как часть плавника) -->
+                    <text x="60" y="82" font-family="'Arial Black', Impact, sans-serif" font-size="42" font-weight="900"
+                          fill="url(#bodyGrad)" filter="url(#softGlow)">F</text>
+                </g>
 
-                <!-- Плавник-спинка (верхний) -->
-                <path d="M 130 35 Q 145 8 160 30 L 145 33 Z" 
-                      fill="url(#sharkGrad)" class="shark-fin"/>
+                <!-- ГЛАЗ АКУЛЫ (между F и i) -->
+                <circle cx="104" cy="66" r="3.4" fill="#ff453a" class="eye-blink"/>
+                <circle cx="104" cy="66" r="1.5" fill="#fff"/>
 
-                <!-- Глаз акулы -->
-                <circle cx="55" cy="58" r="3" fill="#ff453a" class="shark-eye"/>
-                <circle cx="55" cy="58" r="1.5" fill="#fff"/>
+                <!-- БУКВЫ ТЕЛА: i S H K -->
+                <text x="112" y="82" font-family="'Arial Black', Impact, sans-serif" font-size="42" font-weight="900"
+                      fill="url(#bodyGrad)" filter="url(#softGlow)">i</text>
+                <text x="128" y="82" font-family="'Arial Black', Impact, sans-serif" font-size="42" font-weight="900"
+                      fill="url(#bodyGrad)" filter="url(#softGlow)">S</text>
+                <text x="172" y="82" font-family="'Arial Black', Impact, sans-serif" font-size="42" font-weight="900"
+                      fill="url(#bodyGrad)" filter="url(#softGlow)">H</text>
+                <text x="216" y="82" font-family="'Arial Black', Impact, sans-serif" font-size="42" font-weight="900"
+                      fill="url(#bodyGrad)" filter="url(#softGlow)">K</text>
 
-                <!-- Жабры (декоративные линии) -->
-                <path d="M 250 45 Q 255 55 250 65" stroke="#ff9f0a" stroke-width="1.2" fill="none" opacity="0.5"/>
-                <path d="M 258 43 Q 263 55 258 67" stroke="#ff9f0a" stroke-width="1.2" fill="none" opacity="0.4"/>
-                <path d="M 266 45 Q 270 55 266 65" stroke="#ff9f0a" stroke-width="1.2" fill="none" opacity="0.3"/>
+                <!-- БУКВА A — как верхний плавник-хвост акулы, соединена с телом -->
+                <text x="258" y="82" font-family="'Arial Black', Impact, sans-serif" font-size="42" font-weight="900"
+                      fill="url(#bodyGrad)" filter="url(#softGlow)">A</text>
 
-                <!-- Буквы в форме акулы: FiSHKA -->
-                <!-- F — стилизована как плавник -->
-                <text x="42" y="78" font-family="'Arial Black', Impact, sans-serif" font-size="46" font-weight="900" 
-                      fill="url(#textGrad)" filter="url(#glow)" class="shark-fin" style="letter-spacing: -2px;">F</text>
-                
-                <!-- i — с точкой-пузырьком -->
-                <text x="72" y="78" font-family="'Arial Black', Impact, sans-serif" font-size="46" font-weight="900" 
-                      fill="url(#textGrad)" filter="url(#glow)" style="letter-spacing: -2px;">i</text>
-                <circle cx="82" cy="40" r="4" fill="#ff9f0a" class="bubble"/>
-                
-                <!-- S -->
-                <text x="95" y="78" font-family="'Arial Black', Impact, sans-serif" font-size="46" font-weight="900" 
-                      fill="url(#textGrad)" filter="url(#glow)" style="letter-spacing: -2px;">S</text>
-                
-                <!-- H -->
-                <text x="130" y="78" font-family="'Arial Black', Impact, sans-serif" font-size="46" font-weight="900" 
-                      fill="url(#textGrad)" filter="url(#glow)" style="letter-spacing: -2px;">H</text>
-                
-                <!-- K -->
-                <text x="168" y="78" font-family="'Arial Black', Impact, sans-serif" font-size="46" font-weight="900" 
-                      fill="url(#textGrad)" filter="url(#glow)" style="letter-spacing: -2px;">K</text>
-                
-                <!-- A — с хвостиком, как хвост акулы -->
-                <text x="205" y="78" font-family="'Arial Black', Impact, sans-serif" font-size="46" font-weight="900" 
-                      fill="url(#textGrad)" filter="url(#glow)" style="letter-spacing: -2px;">A</text>
+                <!-- БОКОВОЙ ПЛАВНИК (снизу под буквами S-H) -->
+                <path d="M 150 84 Q 165 108 190 100 Q 175 92 168 84 Z" 
+                      fill="url(#finGrad)" opacity="0.9"/>
 
-                <!-- Пузырьки вокруг -->
-                <circle cx="25" cy="45" r="2.5" fill="#ff9f0a" class="bubble" opacity="0.7"/>
-                <circle cx="15" cy="30" r="1.8" fill="#ff9f0a" class="bubble" opacity="0.5"/>
-                <circle cx="295" cy="38" r="2" fill="#ff9f0a" class="bubble" opacity="0.6"/>
+                <!-- ЖАБРЫ (три линии за буквой K, перед хвостом) -->
+                <path d="M 244 64 Q 248 74 244 84" stroke="#ff9f0a" stroke-width="1.3" fill="none" opacity="0.55"/>
+                <path d="M 250 62 Q 254 74 250 86" stroke="#ff9f0a" stroke-width="1.3" fill="none" opacity="0.45"/>
+                <path d="M 256 62 Q 260 74 256 86" stroke="#ff9f0a" stroke-width="1.3" fill="none" opacity="0.35"/>
 
-                <!-- Линия воды (подчёркивание) -->
-                <path d="M 5 95 Q 80 88 160 92 Q 240 96 315 90" 
-                      stroke="#ff9f0a" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+                <!-- ПУЗЫРЬКИ -->
+                <circle cx="30" cy="40" r="2.6" fill="#ff9f0a" class="bub" opacity="0.75"/>
+                <circle cx="18" cy="24" r="1.9" fill="#ff9f0a" class="bub" opacity="0.5"/>
+                <circle cx="44" cy="30" r="1.5" fill="#ff9f0a" class="bub" opacity="0.6"/>
+
+                <!-- ЛИНИЯ ВОДЫ (подчёркивание под акулой) -->
+                <path d="M 5 108 Q 80 100 160 104 Q 250 108 335 100" 
+                      stroke="#ff9f0a" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
             </svg>
         </div>
-        <!-- ====== КОНЕЦ ЛОГОТИПА-АКУЛЫ ====== -->
+        <!-- ====== КОНЕЦ ЛОГОТИПА ====== -->
 
         <div class="table-badge" id="tableBadge">Столик №1</div>
     </header>
 
-    <nav class="categories-scroll" id="categoriesNav">
-        <!-- Категории будут сгенерированы автоматически -->
-    </nav>
+    <nav class="categories-scroll" id="categoriesNav"></nav>
 
-    <main class="menu-container" id="menuContainer">
-        <!-- Меню будет сгенерировано динамически -->
-    </main>
+    <main class="menu-container" id="menuContainer"></main>
 
     <div class="cart-bar" id="cartBar" style="display: none;" onclick="sendOrderToWhatsApp()">
         <div>
@@ -481,16 +466,13 @@
                     <button class="btn-action" onclick="showAdminTab('qr')">QR-коды (40 столов)</button>
                 </div>
 
-                <!-- Вкладка Редактора -->
                 <div id="tabEditor">
                     <h3>Добавить / Изменить блюдо</h3>
                     <input type="hidden" id="editIndex">
                     <input type="text" id="editName" class="input-field" placeholder="Название блюда">
                     <input type="number" id="editPrice" class="input-field" placeholder="Цена (руб)">
                     <input type="text" id="editTime" class="input-field" placeholder="Время готовки (~15 мин)">
-                    <select id="editCategory" class="input-field">
-                        <!-- Динамически заполняется -->
-                    </select>
+                    <select id="editCategory" class="input-field"></select>
                     <p style="font-size: 12px; color: var(--text-sub);">Загрузить фото из памяти устройства:</p>
                     <input type="file" id="editImageFile" accept="image/*" class="input-field">
                     
@@ -502,7 +484,6 @@
                     <div id="adminFoodList" style="margin-top: 10px;"></div>
                 </div>
 
-                <!-- Вкладка QR-кодов -->
                 <div id="tabQR" style="display: none;">
                     <h3>QR-коды для 40 столиков</h3>
                     <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 10px;">Распечатайте и наклейте на соответствующие столики:</p>
@@ -516,7 +497,6 @@
     </div>
 
     <script>
-        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
         const PHONE_NUMBER = "79681755402";
         
         const initialMenu = [
@@ -534,7 +514,6 @@
         let activeCategory = "Все";
         let currentTable = 1;
 
-        // ПОЛУЧЕНИЕ НОМЕРА СТОЛА ИЗ URL (?table=N)
         function initTableNumber() {
             const urlParams = new URLSearchParams(window.location.search);
             const tableParam = urlParams.get('table');
@@ -544,7 +523,6 @@
             document.getElementById('tableBadge').innerText = `Столик №${currentTable}`;
         }
 
-        // РЕНДЕР КАТЕГОРИЙ И МЕНЮ
         function renderCategories() {
             const categories = ["Все", ...new Set(menuData.map(item => item.cat))];
             const nav = document.getElementById('categoriesNav');
@@ -552,7 +530,6 @@
                 <button class="cat-btn ${cat === activeCategory ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>
             `).join('');
 
-            // Заполнение категорий в админке
             const editCatSelect = document.getElementById('editCategory');
             editCatSelect.innerHTML = categories.filter(c => c !== "Все").map(c => `<option value="${c}">${c}</option>`).join('');
             editCatSelect.innerHTML += `<option value="Новая">+ Добавить новую категорию</option>`;
@@ -568,7 +545,7 @@
             const container = document.getElementById('menuContainer');
             const filtered = activeCategory === "Все" ? menuData : menuData.filter(i => i.cat === activeCategory);
 
-            container.innerHTML = filtered.map((item, idx) => {
+            container.innerHTML = filtered.map((item) => {
                 const globalIndex = menuData.indexOf(item);
                 const qty = cart[globalIndex] || 0;
 
@@ -599,7 +576,6 @@
             }).join('');
         }
 
-        // КОРЗИНА И ОБНОВЛЕНИЕ ПОРЦИЙ
         function updateQty(index, delta) {
             cart[index] = (cart[index] || 0) + delta;
             if (cart[index] <= 0) delete cart[index];
@@ -626,7 +602,6 @@
             }
         }
 
-        // ОТПРАВКА В WHATSAPP
         function sendOrderToWhatsApp() {
             let orderText = `📍 *ЗАКАЗ — СТОЛИК №${currentTable}*\n\n`;
             let totalPrice = 0;
@@ -644,7 +619,6 @@
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
         }
 
-        // АДМИНКА И ПАРОЛЬ
         function openAdminModal() {
             document.getElementById('adminModal').style.display = 'block';
         }
@@ -670,7 +644,6 @@
             document.getElementById('tabQR').style.display = tab === 'qr' ? 'block' : 'none';
         }
 
-        // РЕДАКТИРОВАНИЕ И СОХРАНЕНИЕ
         function saveFoodItem() {
             const name = document.getElementById('editName').value;
             const price = parseFloat(document.getElementById('editPrice').value);
@@ -712,7 +685,7 @@
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    processSave(e.target.result); // Конвертация файла в DataURL
+                    processSave(e.target.result);
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
@@ -760,7 +733,6 @@
             document.getElementById('editImageFile').value = "";
         }
 
-        // ГЕНЕРАЦИЯ 40 QR-КОДОВ
         function generateQRCodes() {
             const grid = document.getElementById('qrGrid');
             grid.innerHTML = "";
@@ -780,7 +752,6 @@
             }
         }
 
-        // СТАРТ
         initTableNumber();
         renderCategories();
         renderMenu();
